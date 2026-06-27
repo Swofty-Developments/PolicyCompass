@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <radialGradient id="face" cx="38%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#2c2114" />
+      <stop offset="100%" stop-color="#141009" />
+    </radialGradient>
+    <linearGradient id="needleN" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e0584f" />
+      <stop offset="100%" stop-color="#9e2b25" />
+    </linearGradient>
+  </defs>
+
+  <!-- body -->
+  <circle cx="32" cy="32" r="30" fill="url(#face)" stroke="#b88a3a" stroke-width="2.5" />
+  <circle cx="32" cy="32" r="25" fill="none" stroke="#caa64a" stroke-width="1" stroke-opacity="0.5" stroke-dasharray="1 3" />
+
+  <!-- compass rose: gold star -->
+  <path d="M32 8 L37.5 26.5 L56 32 L37.5 37.5 L32 56 L26.5 37.5 L8 32 L26.5 26.5 Z"
+        fill="#caa64a" stroke="#7a5c2e" stroke-width="0.8" stroke-linejoin="round" />
+  <!-- north point in red -->
+  <path d="M32 8 L37.5 26.5 L26.5 26.5 Z" fill="url(#needleN)" />
+  <!-- west/east soft highlight -->
+  <path d="M8 32 L26.5 37.5 L26.5 26.5 Z" fill="#b8923c" />
+
+  <!-- hub -->
+  <circle cx="32" cy="32" r="4.4" fill="#1a130d" stroke="#e8b04a" stroke-width="1.6" />
+  <circle cx="32" cy="32" r="1.4" fill="#e8b04a" />
+</svg>
