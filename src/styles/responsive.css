@@ -1,0 +1,41 @@
+/* Phone / narrow-screen overrides. Selectors are .desk-scoped so they win
+   regardless of stylesheet import order. */
+@media (max-width: 760px) {
+  /* ---- bill card: stack the broadsheet into one column ---- */
+  .desk .billsheet { padding: 1.6vh 4.5vw; }
+  .desk .b-scroll { justify-content: flex-start; }
+  .desk .b-grid { grid-template-columns: 1fr; grid-template-rows: none; gap: 2vh; }
+  .desk .b-lead, .desk .b-right, .desk .b-analysis { grid-area: auto; }
+  .desk .b-title { font-size: clamp(26px, 7.5vw, 40px); }
+  .desk .b-dek { font-size: clamp(13px, 3.8vw, 17px); }
+  .desk .b-copy { font-size: clamp(14px, 3.9vw, 18px); }
+  .desk .b-secname { font-size: 12px; }
+  .desk .b-stats .n { font-size: clamp(18px, 6vw, 28px); }
+  .desk .cols { flex-direction: column; gap: 1.4vh; }
+  .desk .pt { font-size: clamp(14px, 3.9vw, 18px); }
+  .desk .chart-host { height: 190px; }
+
+  /* ---- slimmer swipe gutters so the card gets the width ---- */
+  .desk .gutter { flex-basis: 30px; }
+  .desk .gutter .gtext { font-size: 11px; letter-spacing: 0.12em; }
+  .desk .gutter.l { border-left-width: 5px; }
+  .desk .gutter.r { border-right-width: 5px; }
+  .desk .stage { padding: 1.2vh 1.5vw; }
+  .desk .stamp-overlay { font-size: clamp(26px, 9vw, 44px); }
+
+  /* ---- verdict: stack the two columns, let the ledger scroll ---- */
+  .desk .ledger { padding: 2vh 4.5vw; overflow-y: auto; }
+  .desk .v-body { display: flex; flex-direction: column; gap: 2vh; }
+  .desk .v-left { overflow: visible; padding-right: 0; }
+  .desk .v-head h2 { font-size: clamp(26px, 8vw, 40px); }
+  .desk .v-right { gap: 1.4vh; }
+  .desk .v-actions { flex-wrap: wrap; }
+
+  /* ---- home ---- */
+  .desk .home-stage { padding: 1.6vh 1.5vw; }
+  .desk .introcard-wrap { width: 100%; max-height: 76vh; }
+  .desk .introcard { padding: 20px 6vw; }
+  .desk .introcard-title { font-size: clamp(34px, 11vw, 52px); }
+  .desk .introcard-how { flex-direction: column; gap: 14px; align-items: center; }
+  .desk .casefiles-row { justify-content: flex-start; }
+}

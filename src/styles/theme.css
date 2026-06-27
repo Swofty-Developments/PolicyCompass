@@ -1,0 +1,148 @@
+/* ============================================================================
+   Policy Compass — the Dossier. Global, in-world theme. Every screen lives on
+   the desk; documents rest on it. Ported from the approved mockups.
+   ============================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Courier+Prime:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Caveat:wght@600&display=swap');
+
+:root {
+  --paper-1: #f6ebd0;
+  --paper-2: #ecdcb6;
+  --paper-3: #e0cd9f;
+  --ink: #221a10;
+  --ink-soft: #2a2012;
+  --sepia: #7a5c2e;
+  --sepia-deep: #5e4a28;
+  --rule: #b59b6a;
+  --red: #9e2b25;
+  --red-bright: #c2403a;
+  --green: #3c6b2f;
+  --green-bright: #5a8f5f;
+  --blue-link: #1d4ea8;
+  --gold: #e8b04a;
+
+  --serif-display: 'Cormorant Garamond', Georgia, serif;
+  --serif-body: 'EB Garamond', Georgia, serif;
+  --mono: 'Courier Prime', 'Courier New', monospace;
+  --hand: 'Caveat', cursive;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- the desk (global backdrop) ---- */
+.desk {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(120, 90, 50, 0.22), transparent 60%),
+    radial-gradient(140% 120% at 50% 120%, rgba(0, 0, 0, 0.65), transparent 55%),
+    linear-gradient(160deg, #241a12, #1a130d 45%, #120c08);
+  background-color: #1a130d;
+  display: flex;
+  align-items: stretch;
+  user-select: none;
+}
+
+/* ---- a parchment sheet ---- */
+.sheet {
+  position: relative;
+  background: radial-gradient(120% 120% at 18% 0%, var(--paper-1) 0%, var(--paper-2) 55%, var(--paper-3) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  color: var(--ink);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), inset 0 0 90px rgba(120, 90, 40, 0.12);
+}
+.sheet::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6'><circle cx='1' cy='1' r='.5' fill='%23000' opacity='.04'/></svg>");
+}
+
+/* ---- type ---- */
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--sepia); }
+.title-xl { font-family: var(--serif-display); font-weight: 700; line-height: 0.97; margin: 0; }
+.dek { font-family: var(--serif-body); font-weight: 500; color: var(--sepia-deep); }
+.body-copy { font-family: var(--serif-body); font-weight: 500; line-height: 1.5; color: var(--ink-soft); }
+.label { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.16em; }
+.hand { font-family: var(--hand); color: var(--red-bright); }
+
+.secname {
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.secname svg { stroke: var(--red); fill: none; stroke-width: 1.7; }
+
+mark { background: linear-gradient(transparent 55%, rgba(232, 176, 74, 0.65) 55%); color: inherit; padding: 0 1px; }
+.redmark { border-bottom: 2px solid var(--red-bright); }
+
+/* ---- the wax stamp ---- */
+.stamp {
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--red);
+  border: 3px solid var(--red);
+  border-radius: 4px;
+  padding: 6px 11px;
+  opacity: 0.85;
+}
+
+/* ---- stat chips ---- */
+.chip {
+  background: linear-gradient(#f9f0d6, #eddfba);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  padding: 1vh 0.5vw;
+}
+.chip .n { font-family: var(--mono); font-weight: 700; color: var(--red); line-height: 1; }
+.chip .u { font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--sepia); display: block; line-height: 1.2; }
+
+/* ---- source links ---- */
+.src { color: var(--blue-link); text-decoration: underline; text-decoration-color: rgba(29, 78, 168, 0.5); cursor: pointer; white-space: nowrap; }
+.src::after { content: ' \2197'; font-size: 0.8em; }
+
+/* ---- spectrum bar (verdict) ---- */
+.spectrum {
+  position: relative;
+  border: 1.5px solid var(--sepia-deep);
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #9e2b25, #caa64a 38%, #cbb789 50%, #5a8f5f 62%, #3a2d6b);
+  box-shadow: inset 0 1px 4px rgba(60, 45, 20, 0.35);
+}
+.spectrum .zone { position: absolute; top: 0; bottom: 0; border-left: 1px dashed rgba(43, 33, 20, 0.5); }
+.spectrum .zone.hot { background: rgba(43, 33, 20, 0.16); cursor: help; }
+.spectrum .band { position: absolute; top: 0; bottom: 0; background: rgba(43, 33, 20, 0.28); border-left: 2px solid rgba(43, 33, 20, 0.6); border-right: 2px solid rgba(43, 33, 20, 0.6); }
+.spectrum .pin {
+  position: absolute; top: 50%;
+  width: 16px; height: 16px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 30%, #f3e7c9, #b8a06f);
+  border: 2px solid var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+button { font: inherit; cursor: pointer; }
+a { color: var(--blue-link); }
