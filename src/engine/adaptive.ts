@@ -62,3 +62,42 @@ export function selectNext(
   }
   return best
 }
+
+/**
+ * A "wildcard probe" — deliberately serves a bold, unused bill that is a genuine
+ * STRETCH from where the player currently sits (preferring the pole they have NOT
+ * leaned toward). It tests "would you actually make a wild change?", surfaces the
+ * historical extremes a moderate run would otherwise never reach, and still adds
+ * real information at the tails.
+ */
+export function selectProbe(
+  posteriors: Posteriors,
+  bills: Bill[],
+  servedIds: Set<string>,
+  minExtremity = 0.72,
+): Bill | null {
+  const unused = bills.filter((b) => !servedIds.has(b.id))
+  if (unused.length === 0) return null
+  const bold = unused.filter((b) => (b.loadings[0]?.extremity ?? 0) >= minExtremity)
+  const pool = bold.length ? bold : unused
+
+  const axisMean: Record<AxisId, number> = {} as Record<AxisId, number>
+  for (const ax of AXIS_IDS) axisMean[ax] = mean(posteriors[ax])
+
+  let best: Bill | null = null
+  let bestScore = -Infinity
+  for (const b of pool) {
+    const l = b.loadings[0]
+    if (!l) continue
+    const dir = l.direction === 'right' ? 1 : -1
+    const loc = dir * l.extremity
+    // how far a "yes" would drag them — the bolder the leap from here, the better the probe
+    const stretch = Math.abs(loc - axisMean[l.axis])
+    const score = l.extremity * (0.5 + stretch)
+    if (score > bestScore) {
+      bestScore = score
+      best = b
+    }
+  }
+  return best
+}

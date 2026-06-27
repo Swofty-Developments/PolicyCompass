@@ -1,7 +1,18 @@
 import type { AxisId, Bill, VoteRecord } from '../types'
 import { AXIS_IDS } from '../types'
 import { certainty, mean, uniform, update } from './posterior'
-import { selectNext, type Posteriors } from './adaptive'
+import { selectNext, selectProbe, type Posteriors } from './adaptive'
+
+// Every Nth card is a "wildcard probe" (a bold stretch), so even a moderate run
+// meets the extremes and gets tested on whether they'd make a radical swing.
+const PROBE_EVERY = 6
+
+function pickNext(posteriors: Posteriors, bills: Bill[], served: Set<string>, position: number): Bill | null {
+  if (position >= PROBE_EVERY && position % PROBE_EVERY === 0) {
+    return selectProbe(posteriors, bills, served) ?? selectNext(posteriors, bills, served)
+  }
+  return selectNext(posteriors, bills, served)
+}
 
 export interface SessionState {
   posteriors: Posteriors
@@ -78,7 +89,7 @@ export function rebuildSession(
   if (history.length >= cappedTarget) {
     finished = true
   } else {
-    current = selectNext(posteriors, bills, new Set(servedIds))
+    current = pickNext(posteriors, bills, new Set(servedIds), history.length + 1)
     if (!current) finished = true
     else servedIds.push(current.id)
   }
@@ -129,7 +140,7 @@ export function applyVote(state: SessionState, bills: Bill[], ratified: boolean)
   if (history.length >= state.target) {
     finished = true
   } else {
-    current = selectNext(posteriors, bills, new Set(servedIds))
+    current = pickNext(posteriors, bills, new Set(servedIds), history.length + 1)
     if (!current) finished = true
     else servedIds.push(current.id)
   }
