@@ -1,0 +1,5 @@
+export const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x))
+export const pad2 = (n: number) => String(n).padStart(2, '0')
+export const signed = (n: number) => (n > 0 ? `+${n}` : `${n}`)
+export const pct = (n: number) => Math.round(n * 100)
+export const toScale100 = (v: number) => Math.round(((v + 1) / 2) * 100)
