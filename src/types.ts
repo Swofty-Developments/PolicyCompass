@@ -19,6 +19,12 @@ export interface AxisMeta {
 /** Which pole ratifying a bill indicates. left = Communist (-1), right = Fascist (+1). */
 export type Pole = 'left' | 'right'
 
+/** What the player did with a bill. Abstain serves the card but adds no evidence. */
+export type VoteVerdict = 'ratify' | 'strike' | 'abstain'
+
+/** How hard the swipe was — reluctant votes carry tempered evidence weight. */
+export type Conviction = 'firm' | 'reluctant'
+
 /**
  * One axis a bill loads on, with its ideological placement and signal strength.
  * Scoring model (per axis): a YES on this bill is evidence that the voter's
@@ -166,7 +172,9 @@ export interface VoteRecord {
   billId: string
   billNumber: number
   title: string
-  ratified: boolean
+  verdict: VoteVerdict
+  /** Present on ratify/strike; abstains carry no conviction */
+  conviction?: Conviction
   /** mean change per affected axis, scaled ×100 and rounded (− = leftward) */
   deltas: { axis: AxisId; delta: number }[]
   /** overall certainty change for affected axes, ×100 */
@@ -180,7 +188,7 @@ export interface Verdict {
   archetype: Archetype
   leaders: { leader: Leader; pct: number }[]
   parties: { party: Party; pct: number }[]
-  tally: { ratified: number; struck: number; total: number }
+  tally: { ratified: number; struck: number; abstained: number; total: number }
   certainty: number
   history: VoteRecord[]
 }

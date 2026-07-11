@@ -1,8 +1,10 @@
+import type { Conviction, VoteVerdict } from '../types'
 import { BILLS_VERSION, RUN_SCHEMA_VERSION } from '../data/version'
 
 export interface SavedVote {
   billId: string
-  ratified: boolean
+  verdict: VoteVerdict
+  conviction?: Conviction
 }
 
 export interface SavedRun {
@@ -11,6 +13,7 @@ export interface SavedRun {
   updatedAt: number
   schemaVersion: number
   billsVersion: string
+  /** Docket cap at the time of play — display only; the engine re-derives closure. */
   target: number
   votes: SavedVote[]
   finished: boolean

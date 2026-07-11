@@ -5,4 +5,4 @@ export const BILLS_VERSION = '2026.06.28'
 
 // Bump only when the SavedRun shape changes. Runs with a different schema are
 // dropped on load rather than mis-read.
-export const RUN_SCHEMA_VERSION = 1
+export const RUN_SCHEMA_VERSION = 2

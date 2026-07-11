@@ -34,14 +34,15 @@ export function uniform(): number[] {
   return new Array(GRID_N).fill(1 / GRID_N)
 }
 
-/** Multiply the grid by the likelihood of the observed swipe and renormalise. */
-export function update(grid: number[], l: AxisLoading, ratified: boolean): number[] {
+/** Multiply the grid by the likelihood of the observed swipe and renormalise.
+ *  `weight` tempers the evidence (likelihood^weight) — 1 = full-conviction swipe. */
+export function update(grid: number[], l: AxisLoading, ratified: boolean, weight = 1): number[] {
   const next = new Array(GRID_N)
   let sum = 0
   for (let i = 0; i < GRID_N; i++) {
     const p = pRatify(GRID[i], l)
     const like = ratified ? p : 1 - p
-    const v = grid[i] * like
+    const v = grid[i] * (weight === 1 ? like : Math.pow(like, weight))
     next[i] = v
     sum += v
   }
