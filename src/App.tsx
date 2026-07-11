@@ -10,13 +10,20 @@ import { SwipeDeck } from './components/deck/SwipeDeck'
 import { RevealSlip } from './components/deck/RevealSlip'
 import { Verdict } from './components/verdict/Verdict'
 import { SharedStanding } from './components/screens/SharedStanding'
+import { TermsApp } from './terms/components/TermsApp'
+import { SharedObituary } from './terms/components/obituary/SharedObituary'
+import { decodeTermsShare, type TermsShare } from './terms/lib/share'
+import type { TermsSetup } from './terms/types'
 
 type Phase = 'home' | 'play' | 'verdict'
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('home')
+  const [mode, setMode] = useState<'compass' | 'terms'>('compass')
   const [runs, setRuns] = useState<SavedRun[]>(() => listRuns())
   const [shared, setShared] = useState<SharedResult | null>(() => decodeShare(window.location.hash))
+  const [sharedTerms, setSharedTerms] = useState<TermsShare | null>(() => decodeTermsShare(window.location.hash))
+  const [termsChallenge, setTermsChallenge] = useState<{ seed: number; setup: TermsSetup } | null>(null)
   // The unsealed record for the bill just voted on; the deck is locked beneath it.
   const [reveal, setReveal] = useState<{ bill: Bill; verdict: VoteVerdict } | null>(null)
   const { runId, state, startNew, resume, vote, clear } = useRun(bills)
@@ -43,14 +50,37 @@ export default function App() {
     )
   }
 
+  // Terms share links use their own #t= namespace; checked after all hooks.
+  if (sharedTerms) {
+    const clearHash = () => {
+      window.history.replaceState(null, '', window.location.pathname)
+      setSharedTerms(null)
+    }
+    return (
+      <SharedObituary
+        share={sharedTerms}
+        onChallenge={(seed, setup) => { clearHash(); setTermsChallenge({ seed, setup }); setMode('terms') }}
+        onExit={clearHash}
+      />
+    )
+  }
+
   let content: ReactNode
-  if (phase === 'home') {
+  if (mode === 'terms') {
+    content = (
+      <TermsApp
+        challenge={termsChallenge}
+        onExit={() => { setTermsChallenge(null); setMode('compass') }}
+      />
+    )
+  } else if (phase === 'home') {
     content = (
       <Home
         runs={runs}
         onNew={() => { setReveal(null); startNew(); setPhase('play') }}
         onResume={(r) => { setReveal(null); const next = resume(r); setPhase(next.finished ? 'verdict' : 'play') }}
         onDiscard={(id) => { if (id === runId) clear(); deleteRun(id); refreshRuns() }}
+        onCareer={() => setMode('terms')}
       />
     )
   } else if (phase === 'play' && (state.current || reveal)) {
@@ -87,7 +117,7 @@ export default function App() {
   return (
     <AnimatePresence>
       <motion.div
-        key={phase}
+        key={`${mode}:${phase}`}
         style={{ position: 'fixed', inset: 0 }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
