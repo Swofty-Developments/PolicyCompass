@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { bills } from '../../data'
 import { scenario } from '../data/scenario'
 import { renderEventBody } from '../engine/events'
+import { EMERGENCY_WHIPS_PER_TERM } from '../engine/floor'
 import { buildObituary } from '../engine/obituary'
 import { useTermsRun } from '../hooks/useTermsRun'
 import { clearSavedRun, fileCareer } from '../lib/storage'
@@ -36,6 +37,7 @@ const PORTFOLIO_NAMES: Record<Portfolio, string> = {
 const DROPPED_NOTICE: Record<string, string> = {
   bills: 'The clerks have re-bound the order paper. An unfinished career is filed as it stood.',
   schema: 'The House has adopted new standing orders. An unfinished career is filed as it stood.',
+  scenario: 'The boundary commission has redrawn the map. An unfinished career is filed as it stood.',
   corrupt: 'Water damage in the records office. An unfinished career could not be recovered.',
 }
 
@@ -144,6 +146,7 @@ export function TermsApp({
       return (
         <ElectionNight
           night={stage.night}
+          recess={stage.recess}
           blocs={scenario.blocs}
           partyId={state.partyId}
           onContinue={advance}
@@ -243,10 +246,17 @@ export function TermsApp({
             officeLabel={officeLabel(state)}
             knifeEdge={stage.projection.knifeEdge}
             ledgerUnlocked={standingDisclosed(state)}
+            emergencyWhip={
+              state.office === 'leader'
+                ? { spent: state.emergencyWhipsThisTerm >= EMERGENCY_WHIPS_PER_TERM }
+                : null
+            }
             onOpenLedger={() => setLedgerOpen(true)}
             onExit={onExit}
             onAbandon={abandon}
-            onVote={(choice) => act({ type: 'vote', choice })}
+            onVote={(choice, emergencyWhip) =>
+              act({ type: 'vote', choice, emergencyWhip: emergencyWhip || undefined })
+            }
           />
         )
       }

@@ -83,7 +83,7 @@ export interface SystemicFire {
 
 /**
  * The next event due outside the docket, if any: scheduled follow-ups first,
- * then state triggers (fiscal telegram, unrest, the once-per-run ultimatum).
+ * then state triggers (fiscal telegram, unrest, the once-per-term ultimatum).
  */
 export function systemicDue(state: TermsState, scenario: Scenario): SystemicFire | null {
   const gatedOk = (id: string): boolean => {
@@ -100,8 +100,8 @@ export function systemicDue(state: TermsState, scenario: Scenario): SystemicFire
   }
 
   const term = termOf(state.actId)
-  if (state.trust < ULTIMATUM_TRUST && !state.flags['ultimatum-fired'] && gatedOk(EV_ULTIMATUM)) {
-    return { eventId: EV_ULTIMATUM, setFlag: 'ultimatum-fired' }
+  if (state.trust < ULTIMATUM_TRUST && !state.flags[`fired:ultimatum:${term}`] && gatedOk(EV_ULTIMATUM)) {
+    return { eventId: EV_ULTIMATUM, setFlag: `fired:ultimatum:${term}` }
   }
   if (
     state.treasury < FISCAL_CRISIS_TREASURY &&

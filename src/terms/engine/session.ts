@@ -8,6 +8,7 @@ import type {
   DivisionResult,
   EndingStamp,
   Posteriors,
+  RecessSettlement,
   SavedTermsRun,
   Scenario,
   TermsAction,
@@ -42,6 +43,7 @@ import {
 } from './events'
 import {
   CONTESTED_MARGIN,
+  EMERGENCY_WHIPS_PER_TERM,
   fieldedBlocs,
   projectDivision,
   projectSeats,
@@ -52,7 +54,7 @@ import { FERVOUR_DECAY, runElection, takeSpawnSeats, TERM_TRUST_DECAY, WIN_TRUST
 import { roll } from './rng'
 
 /** Mirrors lib/storage's TERMS_SCHEMA_VERSION so the engine has no storage dep. */
-const SCHEMA_VERSION = 1
+const SCHEMA_VERSION = 2
 
 const START_TRUST = 55
 const START_CONVICTION = 70
@@ -62,6 +64,7 @@ const ZEITGEIST_SHIFT = 0.15
 const FILL_TREASURY_SCALE = 8
 const PROMISE_BREAK_TRUST = -14
 const PROMISE_BREAK_RELATIONS = -30
+const EMERGENCY_WHIP_TRUST = -4
 const PROMISE_KEEP_RELATIONS = 12
 const BARGAIN_RELATIONS = 6
 const MOOD_TRUST_CAP = 3
@@ -211,27 +214,38 @@ function enterBillStage(s: TermsState, scenario: Scenario, bills: Bill[], bill: 
   return s
 }
 
+/** Obituary-cause clause naming the recess breaks (obituary paths skip election night). */
+function recessClause(scenario: Scenario, broken: RecessSettlement['broken']): string {
+  const shorts = [...new Set(broken.map((b) => blocShort(scenario, b.blocId)))]
+  return `${broken.length === 1 ? 'a promise' : 'promises'} to ${shorts.join(' and ')} died with the term, unkept`
+}
+
 function endOfTerm(s: TermsState, scenario: Scenario, act: Act): TermsState {
-  const fx = newFx(s)
-  for (const p of [...s.promises]) settlePromise(fx, scenario, p, false)
-  checkExpulsion(s, scenario)
-  checkRevolution(s, scenario)
-  if (s.ended) {
-    s.stage = { kind: 'obituary' }
-    return s
-  }
-  const term = termOf(s.actId)
-  if (s.flags['ultimatum-fired'] && !s.flags['ultimatum-cleared'] && s.flags['ultimatum-term'] === term) {
-    if (s.trust >= ULTIMATUM_RECOVER) s.flags['ultimatum-cleared'] = true
-    else {
-      endRun(s, 'NO CONFIDENCE', 'The ultimatum expired with confidence unrecovered — the House withdrew it', false)
-      s.stage = { kind: 'obituary' }
-      return s
+  // Promise breaks route through the tagged-delta Fx like any division, and the
+  // settlement is surfaced (election stage or obituary cause) — never silent.
+  let recess: RecessSettlement | undefined
+  if (s.promises.length) {
+    const prev = structuredClone(s)
+    const fx = newFx(s)
+    const broken = [...s.promises]
+    for (const p of broken) settlePromise(fx, scenario, p, false)
+    recess = {
+      broken: broken.map((p) => ({ blocId: p.blocId, label: p.label })),
+      deltas: finishFx(fx, prev, scenario),
     }
   }
-  if (!act.election) {
+  checkExpulsion(s, scenario)
+  checkRevolution(s, scenario)
+  const term = termOf(s.actId)
+  if (!s.ended && s.flags[`fired:ultimatum:${term}`] && s.trust < ULTIMATUM_RECOVER) {
+    endRun(s, 'NO CONFIDENCE', 'The ultimatum expired with confidence unrecovered — the House withdrew it', false)
+  }
+  if (!s.ended && !act.election) {
     s.termsServed++
     endRun(s, 'RETIRED WITH HONOURS', 'Left the House at a time of their own choosing', true)
+  }
+  if (s.ended) {
+    if (recess) s.ended.cause += ` — ${recessClause(scenario, recess.broken)}`
     s.stage = { kind: 'obituary' }
     return s
   }
@@ -248,7 +262,7 @@ function endOfTerm(s: TermsState, scenario: Scenario, act: Act): TermsState {
     const short = Math.abs(night.seat.total + night.seat.margin).toFixed(1)
     endRun(s, 'DEFEATED', `Lost the seat to the national swing — the count came up ${short} points short`, false)
   }
-  s.stage = { kind: 'election', night }
+  s.stage = { kind: 'election', night, recess }
   return s
 }
 
@@ -265,7 +279,6 @@ function advance(s: TermsState, scenario: Scenario, bills: Bill[]): TermsState {
       if (due.scheduledIndex !== undefined) s.scheduled.splice(due.scheduledIndex, 1)
       if (!due.eventId) continue // gated-out scheduled entry: dropped, nothing fires
       if (due.setFlag) s.flags[due.setFlag] = true
-      if (due.setFlag === 'ultimatum-fired') s.flags['ultimatum-term'] = termOf(s.actId)
       s.position++
       s.stage = { kind: 'event', eventId: due.eventId }
       return s
@@ -313,6 +326,7 @@ function resolveVote(
   scenario: Scenario,
   bills: Bill[],
   choice: VoteChoice,
+  wantsEmergencyWhip: boolean,
 ): TermsState {
   if (s.stage.kind !== 'bill') return s
   const stage = s.stage
@@ -328,8 +342,21 @@ function resolveVote(
     addRelations(fx, scenario, swungBlocId, BARGAIN_RELATIONS, `the bargain with ${blocShort(scenario, swungBlocId)}`, 'negotiation')
   }
 
+  // Emergency Whip: leader-only, once per term, meaningless on an abstention.
+  // Invalid requests are dropped silently — replayed action logs stay safe.
+  const emergencyWhip =
+    wantsEmergencyWhip &&
+    s.office === 'leader' &&
+    choice !== 'abstain' &&
+    s.emergencyWhipsThisTerm < EMERGENCY_WHIPS_PER_TERM
+  if (emergencyWhip) {
+    s.emergencyWhipsThisTerm++
+    addTrust(fx, EMERGENCY_WHIP_TRUST, 'the Emergency Whip')
+    fx.lines.push('The Emergency Whip is served — the party’s hesitants file behind the Member.')
+  }
+
   const conv = scoreVote(prev.posteriors, bill, choice)
-  const res = resolveDivision(s, scenario, bill, choice, { swungBlocId })
+  const res = resolveDivision(s, scenario, bill, choice, { swungBlocId, emergencyWhip })
 
   if (choice !== 'abstain') {
     for (const l of bill.loadings) s.posteriors[l.axis] = update(s.posteriors[l.axis], l, choice === 'ratify')
@@ -441,7 +468,7 @@ function resolveVote(
   s.flags['seen:first-slip'] = true
   const contested = Math.abs(res.ayes - res.noes) <= CONTESTED_MARGIN
   const tier: 'ribbon' | 'full' =
-    isFirst || contested || stage.projection.knifeEdge || !!whip || !!promiseOutcome || res.castingVote
+    isFirst || contested || stage.projection.knifeEdge || !!whip || !!promiseOutcome || res.castingVote || emergencyWhip
       ? 'full'
       : 'ribbon'
   const result: DivisionResult = {
@@ -457,6 +484,7 @@ function resolveVote(
     tier,
     promiseOutcome,
     whipOutcome,
+    emergencyWhip,
   }
   s.stage = { kind: 'result', result }
   return s
@@ -535,6 +563,7 @@ export function newRun(scenario: Scenario, bills: Bill[], seed: number, setup: T
     whipDefiances: 0,
     offersThisTerm: 0,
     whipNotesThisTerm: 0,
+    emergencyWhipsThisTerm: 0,
     posteriors,
     servedBillIds: [],
     votes: [],
@@ -560,7 +589,7 @@ export function applyAction(
   switch (action.type) {
     case 'vote':
       if (state.stage.kind !== 'bill') return state
-      return resolveVote(state, s, scenario, bills, action.choice)
+      return resolveVote(state, s, scenario, bills, action.choice, action.emergencyWhip === true)
 
     case 'negotiate': {
       if (s.stage.kind !== 'negotiation') return state
@@ -614,6 +643,7 @@ export function applyAction(
       s.whipDefiances = 0
       s.offersThisTerm = 0
       s.whipNotesThisTerm = 0
+      s.emergencyWhipsThisTerm = 0
       s.flags['treasuryAtTermStart'] = s.treasury
       s.flags['termStartPos'] = s.position
       s.flags['term' + termOf(s.actId)] = true

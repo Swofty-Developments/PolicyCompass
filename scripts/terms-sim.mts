@@ -354,6 +354,55 @@ if (ftDeath < 0.35 || ftDeath > 0.65) {
   failures.push(`first-timer death rate ${(ftDeath * 100).toFixed(0)}% — target 35–65%`)
 }
 
+// ---- regression: the ultimatum is a standing rule, not once-per-run ----------------
+// Scripted probe: collapse trust in Term I until the ultimatum fires, recover and
+// survive the count, then collapse again in Term II. The Term II ultimatum must
+// re-fire and its unrecovered expiry must end the run NO CONFIDENCE.
+
+function ultimatumRefireProbe(seed: number): void {
+  let state = newRun(scenario, bills, seed, { partyId: 'bloc-national', seatType: 'safe' })
+  const decide = (s: TermsState): TermsAction => {
+    switch (s.stage.kind) {
+      case 'bill': {
+        const bill = stageBill(s)
+        return bill ? leanVote(s, bill) : { type: 'advance' }
+      }
+      case 'negotiation':
+        return { type: 'negotiate', accept: false }
+      case 'event': {
+        const ev = scenario.events.find((e) => s.stage.kind === 'event' && e.id === s.stage.eventId)
+        if (!ev || ev.options.length === 0) return { type: 'advance' }
+        return { type: 'event_option', optionId: safestOption(ev.options).id }
+      }
+      case 'branch':
+        return branchPick(s, (o) => o.portfolio !== 'wilderness')
+      default:
+        return { type: 'advance' }
+    }
+  }
+  let firedT1 = false
+  let firedT2 = false
+  for (let i = 0; i < 600 && state.stage.kind !== 'obituary'; i++) {
+    firedT1 ||= Boolean(state.flags['fired:ultimatum:1'])
+    firedT2 ||= Boolean(state.flags['fired:ultimatum:2'])
+    // Scripted trust, forced between reducer steps (applyAction clones first).
+    if (termOf(state.actId) === 1) state.trust = firedT1 ? 60 : 10
+    else state.trust = 10
+    state = applyAction(state, scenario, bills, decide(state))
+  }
+  firedT1 ||= Boolean(state.flags['fired:ultimatum:1'])
+  firedT2 ||= Boolean(state.flags['fired:ultimatum:2'])
+  if (!firedT1) failures.push(`ultimatum probe (seed ${seed}): no Term I ultimatum fired — probe broken`)
+  else if (!firedT2) {
+    failures.push(`ultimatum probe (seed ${seed}): Term II trust collapse never re-fired the ultimatum — the once-per-run flag is back`)
+  } else if (state.ended?.stamp !== 'NO CONFIDENCE') {
+    failures.push(
+      `ultimatum probe (seed ${seed}): post-recovery collapse ended '${state.ended?.stamp ?? 'UNENDED'}' — expected NO CONFIDENCE`,
+    )
+  }
+}
+ultimatumRefireProbe(3)
+
 console.log('')
 if (failures.length) {
   console.error(`SIM FAILED — ${failures.length} target(s) missed:\n`)

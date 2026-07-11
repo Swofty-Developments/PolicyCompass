@@ -1,5 +1,6 @@
 import type { Office, Portfolio, Scenario, TermsState } from '../../types'
 import { AXES, readPosition } from '../../../engine/axes'
+import { termOf, ULTIMATUM_RECOVER } from '../../engine/events'
 import { signedFine } from '../artifacts/bits'
 import { LedgerCorrespondence } from './LedgerCorrespondence'
 import { LedgerBooks } from './LedgerBooks'
@@ -23,7 +24,11 @@ function officeLine(state: TermsState): string {
 
 function trustNote(trust: number, ultimatum: boolean): string {
   if (trust < 20) return 'below twenty — the whips are talking. Thirty restores confidence.'
-  if (ultimatum) return 'the ultimatum stands — reach thirty before the term is out.'
+  if (ultimatum) {
+    return trust >= ULTIMATUM_RECOVER
+      ? 'the ultimatum lifts if thirty holds to the term’s end.'
+      : 'the ultimatum stands — reach thirty before the term is out.'
+  }
   return 'the whips talk at twenty.'
 }
 function convictionNote(conviction: number): string {
@@ -46,8 +51,10 @@ export interface MemoLine {
 /** The pollster's figures beside their threshold lines — one source for the
  *  ledger memo section and the standing rail. */
 export function memoLines(state: TermsState): MemoLine[] {
+  // Term-scoped: an ultimatum survived in an earlier term no longer stands.
+  const ultimatumLive = Boolean(state.flags[`fired:ultimatum:${termOf(state.actId)}`])
   const rows: MemoLine[] = [
-    { k: 'Confidence', n: state.trust, note: trustNote(state.trust, Boolean(state.flags['ultimatum'])), alert: state.trust < 20 },
+    { k: 'Confidence', n: state.trust, note: trustNote(state.trust, ultimatumLive), alert: state.trust < 20 },
     { k: 'Conviction', n: state.conviction, note: convictionNote(state.conviction), alert: state.conviction < 40 },
     { k: 'Exchequer', n: state.treasury, note: treasuryNote(state.treasury), alert: state.treasury < 15 },
   ]

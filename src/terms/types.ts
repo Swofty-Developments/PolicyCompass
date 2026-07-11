@@ -347,6 +347,15 @@ export interface DivisionResult {
   tier: 'ribbon' | 'full'
   promiseOutcome?: { promise: ActivePromise; kept: boolean }
   whipOutcome?: { obeyed: boolean; strikes: number }
+  /** The Emergency Whip was served on this division (leader coercion, −4 trust) */
+  emergencyWhip?: boolean
+}
+
+/** Promises that expired unkept at the recess, with their tagged deltas —
+ * surfaced before the count (pillar 6: every hidden delta names its cause). */
+export interface RecessSettlement {
+  broken: { blocId: BlocId; label: string }[]
+  deltas: AppliedDeltas
 }
 
 export type EndingStamp =
@@ -415,7 +424,7 @@ export type StageKind =
       deltas: AppliedDeltas
       succeeded?: boolean
     }
-  | { kind: 'election'; night: ElectionNight }
+  | { kind: 'election'; night: ElectionNight; recess?: RecessSettlement }
   | { kind: 'branch'; branch: Branch }
   | { kind: 'obituary' }
 
@@ -448,6 +457,8 @@ export interface TermsState {
   offersThisTerm: number
   /** Whip notes fired this term (budget: 2) */
   whipNotesThisTerm: number
+  /** Emergency Whips served this term (leader only; budget: 1) */
+  emergencyWhipsThisTerm: number
   /** Compass posterior over the player's real votes — reused test engine */
   posteriors: Posteriors
   servedBillIds: string[]
@@ -469,7 +480,8 @@ export interface TermsSetup {
 }
 
 export type TermsAction =
-  | { type: 'vote'; choice: VoteChoice }
+  /** emergencyWhip is optional and backward-compatible: undefined ⇒ false */
+  | { type: 'vote'; choice: VoteChoice; emergencyWhip?: boolean }
   | { type: 'negotiate'; accept: boolean }
   | { type: 'event_option'; optionId: string }
   | { type: 'branch'; optionId: string }

@@ -16,6 +16,7 @@ export const KNIFE_EDGE_MARGIN = 2
 export const CONTESTED_MARGIN = 8
 export const OFFERS_PER_TERM = 2
 export const WHIP_NOTES_PER_TERM = 2
+export const EMERGENCY_WHIPS_PER_TERM = 1
 /** Extra docket positions allowed past a promise's target bill (systemic inserts:
  *  ultimatum, fiscal/unrest telegrams, scandals and spawn pages each consume one). */
 export const PROMISE_DEADLINE_SLACK = 4
@@ -140,6 +141,9 @@ function selectOffer(
       if (slot.kind !== 'bill') continue
       const target = byId.get(slot.billId)
       if (!target || state.servedBillIds.includes(target.id)) continue
+      // A bill already under promise cannot be demanded twice: fulfilling one
+      // bloc's demand must not count as breaking another's identical one.
+      if (state.promises.some((p) => p.billId === target.id)) continue
       const st = blocStance(bloc.vector, target)
       const side = stanceSide(st)
       if (side === 'hesitant') continue

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { signed } from '../../../lib/format'
-import type { Bloc, ElectionNight as ElectionNightData } from '../../types'
+import type { Bloc, ElectionNight as ElectionNightData, RecessSettlement } from '../../types'
 import { characters } from '../../data/characters'
 import { electionExchange } from '../../data/scenes'
 import { DialogueScene } from '../dialogue/DialogueScene'
@@ -9,11 +9,14 @@ import { DialogueScene } from '../dialogue/DialogueScene'
  *  officer's note itemises the personal seat — the boss fight ends legibly. */
 export function ElectionNight({
   night,
+  recess,
   blocs,
   partyId,
   onContinue,
 }: {
   night: ElectionNightData
+  /** Promises that expired unkept at the recess, settled before this count */
+  recess?: RecessSettlement
   blocs: Bloc[]
   partyId: string
   onContinue: () => void
@@ -45,6 +48,36 @@ export function ElectionNight({
     <div className="desk t-night" onClick={advance}>
       <div className="t-night-scroll">
         <div className="kicker t-night-head">Election Night · The Count</div>
+
+        {recess && (
+          <div className="sheet t-officer" onClick={(e) => e.stopPropagation()}>
+            <div className="kicker">Before the Count · The Recess Settlement</div>
+            {recess.broken.map((b, i) => (
+              <p className="t-slip-line" key={i}>
+                Undertaking to {blocName(b.blocId)} expired with the term, unkept: “{b.label}”.
+              </p>
+            ))}
+            <div className="t-count-rows">
+              {recess.deltas.trust !== 0 && (
+                <div className="t-count-row">
+                  <span className="t-count-label">Confidence — promises broken</span>
+                  <span className={'t-count-pts' + (recess.deltas.trust < 0 ? ' down' : ' up')}>
+                    {signed(recess.deltas.trust)}
+                  </span>
+                </div>
+              )}
+              {recess.deltas.relations.filter((r) => r.delta !== 0).map((r) => (
+                <div className="t-count-row" key={r.blocId}>
+                  <span className="t-count-label">{blocName(r.blocId)} — their word was given</span>
+                  <span className={'t-count-pts' + (r.delta < 0 ? ' down' : ' up')}>{signed(r.delta)}</span>
+                </div>
+              ))}
+            </div>
+            {recess.deltas.lines.map((line, i) => (
+              <div className="hand t-night-trust" key={i}>{line}</div>
+            ))}
+          </div>
+        )}
 
         {night.swings.slice(0, revealed).map((s) => {
           const delta = s.after - s.before

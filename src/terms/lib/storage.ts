@@ -1,9 +1,14 @@
 import { BILLS_VERSION } from '../../data/version'
 import type { ArchivedCareer, Obituary, SavedTermsRun } from '../types'
 
-// Bump only when SavedTermsRun / ArchivedCareer shapes change. Mismatched runs
-// are dropped on load rather than mis-replayed.
-export const TERMS_SCHEMA_VERSION = 1
+// Bump when SavedTermsRun / ArchivedCareer shapes change OR reducer behavior
+// changes replay semantics. Mismatched runs are dropped rather than mis-replayed.
+// v2: term-scoped ultimatum + recess settlement + Emergency Whip.
+export const TERMS_SCHEMA_VERSION = 2
+
+/** Oldest ArchivedCareer schema still readable (the Obituary shape is unchanged
+ *  since v1 — reducer-semantics bumps must not drop filed careers). */
+const ARCHIVE_MIN_SCHEMA = 1
 
 const RUN_KEY = 'policy-compass.terms.run'
 const ARCHIVE_KEY = 'policy-compass.terms.archive'
@@ -69,7 +74,9 @@ function readArchive(): ArchivedCareer[] {
     if (!Array.isArray(parsed)) return []
     // Obituaries are self-contained snapshots: keep across bills versions,
     // drop only on a schema (shape) mismatch.
-    return parsed.filter((c) => c && c.schemaVersion === TERMS_SCHEMA_VERSION && c.obituary)
+    return parsed.filter(
+      (c) => c && c.schemaVersion >= ARCHIVE_MIN_SCHEMA && c.schemaVersion <= TERMS_SCHEMA_VERSION && c.obituary,
+    )
   } catch {
     return []
   }

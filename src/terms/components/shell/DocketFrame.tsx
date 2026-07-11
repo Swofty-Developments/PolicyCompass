@@ -9,6 +9,7 @@ export function DocketFrame({
   officeLabel,
   knifeEdge,
   ledgerUnlocked,
+  whipControl,
   onOpenLedger,
   onExit,
   onAbandon,
@@ -19,6 +20,8 @@ export function DocketFrame({
   officeLabel: string
   knifeEdge: boolean
   ledgerUnlocked: boolean
+  /** Leader-only Emergency Whip toggle, rendered on the strip */
+  whipControl?: ReactNode
   onOpenLedger: () => void
   onExit: () => void
   onAbandon: () => void
@@ -35,6 +38,7 @@ export function DocketFrame({
           <span className="t-strip-office">{officeLabel}</span>
         </div>
         <div className="t-strip-actions">
+          {whipControl}
           {ledgerUnlocked && <button className="t-strip-btn" onClick={onOpenLedger}>Ledger</button>}
           <button className="t-strip-btn" onClick={onExit}>Desk</button>
           <button
