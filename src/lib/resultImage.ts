@@ -8,6 +8,7 @@ export interface ResultImageData {
   topParty?: string
   ratified: number
   struck: number
+  abstained: number
 }
 
 function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -103,7 +104,9 @@ export function renderResultCanvas(data: ResultImageData): HTMLCanvasElement {
   ctx.fillStyle = '#3c6b2f'
   ctx.font = '600 20px Georgia, serif'
   const echo = data.topLeader ? `Echoes ${data.topLeader}` : ''
-  const tally = `Ratified ${data.ratified} · Struck ${data.struck}`
+  const tally =
+    `Ratified ${data.ratified} · Struck ${data.struck}` +
+    (data.abstained > 0 ? ` · Abstained ${data.abstained}` : '')
   ctx.fillText([echo, tally].filter(Boolean).join('     ·     '), cx, H - 70)
 
   ctx.fillStyle = '#7a5c2e'

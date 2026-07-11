@@ -59,7 +59,7 @@ export function SharedStanding({ result, onExit }: { result: SharedResult; onExi
             <VerdictIdentity archetype={arch} />
             <EchoList title="Parties most resembled" items={topParties.map((p) => ({ name: p.party.name, sub: p.party.country, pct: p.pct }))} />
             <EchoList title="Leaders echoed" items={topLeaders.map((p) => ({ name: p.leader.name, sub: `${p.leader.country} · ${p.leader.era}`, pct: p.pct }))} />
-            <TallyStrip ratified={tally[0]} struck={tally[1]} total={tally[0] + tally[1]} />
+            <TallyStrip ratified={tally[0]} struck={tally[1]} abstained={tally[2]} total={tally[0] + tally[1] + tally[2]} />
             <div className="v-actions">
               <button className="v-btn solid" onClick={onExit}>↻ Take the test yourself</button>
             </div>

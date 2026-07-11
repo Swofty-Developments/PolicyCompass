@@ -32,9 +32,14 @@ export function IntroCard({ onBegin, children }: { onBegin: () => void; children
               <div className="how no"><span className="arrow">◀</span><div><div className="hl">Strike Down</div><div className="hs">swipe left to vote no</div></div></div>
               <div className="how yes"><div className="ht"><div className="hl">Ratify</div><div className="hs">swipe right to vote yes</div></div><span className="arrow">▶</span></div>
             </div>
+            <div className="introcard-how abstain">
+              <div className="how neutral"><span className="arrow">▼</span><div><div className="hl">Abstain</div><div className="hs">swipe down to abstain — no reading of you taken</div></div></div>
+            </div>
+            <div className="introcard-conv">A firm, decisive swipe counts for more than a hesitant nudge.</div>
 
             <p className="introcard-lead">
-              When the docket closes, the floor reads your record — placing you on the spectrum from
+              After every vote the record unseals who really sponsored the bill. The docket closes once the
+              floor has read you — usually 10–18 bills — placing you on the spectrum from
               <span className="pl"> Communist</span> to <span className="pr">Fascist</span> across five domains,
               and naming the leaders and parties you echo.
             </p>
