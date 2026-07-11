@@ -3,8 +3,8 @@ import { SwipeDeck } from '../../../components/deck/SwipeDeck'
 import type { VoteChoice } from '../../types'
 import { DocketFrame } from './DocketFrame'
 
-/** Deck adapter: the one seam between Terms and the compass deck. Maps the
- *  binary commit to a Terms vote (abstain arrives with feat/engagement). */
+/** Deck adapter: the one seam between Terms and the compass deck. The deck's
+ *  graded conviction is compass-only; a Terms division reads the verdict alone. */
 export function BillStage({
   bill,
   divisionNo,
@@ -41,8 +41,9 @@ export function BillStage({
       <SwipeDeck
         bill={bill}
         billNumber={divisionNo}
-        total={divisionsTotal}
-        onVote={(ratified) => onVote(ratified ? 'ratify' : 'strike')}
+        maxTarget={divisionsTotal}
+        locked={false}
+        onVote={(input) => onVote(input.verdict as VoteChoice)}
       />
     </DocketFrame>
   )
