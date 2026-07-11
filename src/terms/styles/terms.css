@@ -1,0 +1,527 @@
+/* ============================================================================
+   Terms — the paper artifact layer. Every class is t- prefixed; tokens come
+   from styles/theme.css. Each surface manages its own scroll container.
+   ============================================================================ */
+
+/* ---- the artifact stage: centers one paper on the desk ---- */
+.t-artifact-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2vh;
+  padding: 2.6vh 2vw;
+  min-height: 0;
+}
+.t-arthead {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #b08e54;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- the flip rig (recto/verso) ---- */
+.t-flip {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  max-height: 100%;
+  width: min(700px, 96%);
+  perspective: 1700px;
+  animation: t-settle 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes t-settle {
+  from { opacity: 0; transform: translateY(26px) rotate(-0.8deg) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+.t-flip-inner { position: relative; display: flex; width: 100%; min-height: 0; transform-style: preserve-3d; }
+.t-face { min-height: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.t-face-front { position: relative; display: flex; width: 100%; min-height: 0; }
+.t-face-back { position: absolute; inset: 0; display: flex; transform: rotateY(180deg); pointer-events: none; }
+.t-flip-inner.is-flipped .t-face-front { pointer-events: none; }
+.t-flip-inner.is-flipped .t-face-back { pointer-events: auto; }
+
+.t-flip--frontpage { width: min(900px, 96%); }
+.t-flip--letter { width: min(640px, 94%); }
+.t-flip--memo, .t-flip--ultimatum { width: min(700px, 94%); }
+.t-flip--mandate { width: min(540px, 92%); }
+.t-flip--whipnote { width: min(500px, 92%); }
+.t-flip--sheet { width: min(720px, 94%); }
+.t-flip--slip { width: min(900px, 96%); }
+.t-flip--outcome { width: min(640px, 94%); }
+
+/* ---- paper base ---- */
+.t-paper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  color: var(--ink);
+  background: radial-gradient(120% 120% at 18% 0%, var(--paper-1) 0%, var(--paper-2) 55%, var(--paper-3) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6), inset 0 0 70px rgba(120, 90, 40, 0.12);
+  padding: clamp(16px, 2.6vh, 30px) clamp(18px, 2.6vw, 36px);
+}
+.t-grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='6'><circle cx='1' cy='1' r='.5' fill='%23000' opacity='.04'/></svg>");
+}
+.t-paper-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
+}
+.t-paper-scroll::-webkit-scrollbar { width: 5px; }
+.t-paper-scroll::-webkit-scrollbar-thumb { background: rgba(122, 92, 46, 0.5); border-radius: 3px; }
+
+.t-kick { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); }
+.t-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(24px, 3.1vw, 40px); line-height: 1.02; margin: 0.6vh 0 0.8vh; }
+.t-body { font-family: var(--serif-body); font-weight: 500; font-size: clamp(14px, 1.45vw, 18px); line-height: 1.52; color: var(--ink-soft); white-space: pre-wrap; margin: 0; }
+.t-stamp { position: absolute; top: 12px; right: 14px; transform: rotate(8deg); font-size: 11px; padding: 4px 9px; border-width: 2.5px; z-index: 2; background: transparent; }
+.t-stamp-green { color: var(--green); border-color: var(--green); }
+.t-margin-note {
+  font-family: var(--hand);
+  font-size: clamp(17px, 1.9vw, 22px);
+  line-height: 1.25;
+  color: var(--red-bright);
+  transform: rotate(-1.6deg);
+  margin: 1.2vh 4% 0.4vh 6%;
+}
+
+/* ---- option slips (tappable) ---- */
+.t-options { flex: none; display: flex; flex-direction: column; gap: 8px; margin-top: 1.4vh; padding-top: 1.2vh; border-top: 1px dashed var(--rule); }
+.t-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(#f6edd3, #eddfba);
+  border: 1px dashed var(--sepia);
+  border-radius: 6px;
+  padding: 9px 13px;
+  color: var(--ink);
+  transition: background 0.12s, border-color 0.12s, transform 0.12s;
+}
+.t-option:hover { background: linear-gradient(#f9f1d8, #f0e3bd); border-color: var(--red); transform: translateY(-1px); }
+.t-option:active { transform: translateY(0); }
+.t-option-tag { display: block; font-family: var(--mono); font-weight: 700; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia); margin-bottom: 2px; }
+.t-option-label { font-family: var(--serif-body); font-weight: 600; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.3; }
+.t-option-detail { display: block; font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.15vw, 14px); color: var(--sepia-deep); margin-top: 2px; }
+
+/* ---- precedents: foot list (desktop) + verso (mobile) ---- */
+.t-precfoot { flex: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 14px; margin-top: 1vh; padding-top: 0.8vh; border-top: 1px dashed var(--rule); }
+.t-precfoot-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.t-precitem { display: inline-flex; align-items: baseline; gap: 5px; font-family: var(--serif-body); font-size: 12px; }
+.t-precnum { font-family: var(--mono); font-weight: 700; font-size: 10px; color: var(--sepia); background: rgba(122, 92, 46, 0.16); border-radius: 3px; padding: 0 5px; }
+.t-precfoot .src, .t-verso-list .src { font-size: 12px; }
+
+.t-fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border: none;
+  background: linear-gradient(315deg, #14100a 0 49.5%, transparent 50%);
+  cursor: pointer;
+  display: none;
+  z-index: 3;
+}
+.t-fold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(315deg, transparent 0 50%, #dcc999 50.5%, #cdb787 100%);
+  filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.35));
+}
+.t-fold-hint {
+  position: absolute;
+  right: 56px;
+  bottom: 10px;
+  font-family: var(--hand);
+  font-size: 15px;
+  color: var(--sepia-deep);
+  transform: rotate(-2deg);
+  pointer-events: none;
+  display: none;
+  z-index: 3;
+}
+
+.t-verso { background: linear-gradient(180deg, #e9dcb6, #ddcda0); justify-content: flex-start; }
+.t-verso-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(18px, 2vw, 24px); font-variant: small-caps; margin: 0.4vh 0 0.2vh; }
+.t-verso-note { font-family: var(--serif-body); font-style: italic; font-size: 13px; color: var(--sepia-deep); margin-bottom: 1.2vh; }
+.t-verso-list { display: flex; flex-direction: column; gap: 10px; }
+.t-verso-item { display: flex; align-items: baseline; gap: 9px; font-family: var(--serif-body); font-size: clamp(14px, 1.5vw, 16px); }
+.t-verso-item .src { font-size: clamp(14px, 1.5vw, 16px); }
+.t-verso-back { align-self: center; margin-top: 1.6vh; }
+
+/* ============================ genre skins ============================ */
+
+/* ---- telegram: buff paper, torn edges, urgent mono ---- */
+.t-paper--telegram {
+  border-radius: 0;
+  border: none;
+  background: linear-gradient(180deg, #efe4bf, #e5d7a9);
+  box-shadow: none;
+  filter: drop-shadow(0 22px 38px rgba(0, 0, 0, 0.55));
+}
+.t-paper--telegram::before, .t-paper--telegram::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-repeat: repeat-x;
+  background-size: 13px 10px;
+  pointer-events: none;
+}
+.t-paper--telegram::before {
+  bottom: 100%;
+  background-image: linear-gradient(-45deg, #efe4bf 6px, transparent 0), linear-gradient(45deg, #efe4bf 6px, transparent 0);
+  background-position: left bottom;
+}
+.t-paper--telegram::after {
+  top: 100%;
+  background-image: linear-gradient(-135deg, #e5d7a9 6px, transparent 0), linear-gradient(135deg, #e5d7a9 6px, transparent 0);
+  background-position: left top;
+}
+.t-tg-route { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 1.2vh; padding-right: 92px; }
+.t-tg-route .t-tg-co { font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.3vw, 15px); letter-spacing: 0.22em; text-transform: uppercase; }
+.t-tg-route .t-tg-mark { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); text-align: right; }
+.t-paper--telegram .t-title { font-family: var(--mono); font-size: clamp(17px, 2vw, 24px); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+.t-paper--telegram .t-body { font-family: var(--mono); font-size: clamp(13px, 1.35vw, 16px); line-height: 1.62; letter-spacing: 0.04em; text-transform: uppercase; }
+.t-tg-sender { font-family: var(--mono); font-size: clamp(12px, 1.25vw, 14px); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2vh; text-align: right; }
+.t-paper--telegram .t-options { border-top: 2px solid var(--ink); }
+.t-paper--telegram .t-option { border-style: solid; border-color: var(--ink); border-radius: 0; background: linear-gradient(#f3e9c6, #ecdfb4); }
+.t-paper--telegram .t-option:hover { border-color: var(--red); }
+.t-paper--telegram .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 1.3vw, 15px); text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---- front page: newsprint, masthead, column rules ---- */
+.t-paper--frontpage { background: linear-gradient(180deg, #eee8d4, #e2d9ba); border-radius: 4px; }
+.t-fp-masthead {
+  font-family: var(--serif-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 44px);
+  letter-spacing: 0.08em;
+  font-variant: small-caps;
+  text-align: center;
+  line-height: 1;
+  border-bottom: 3px double var(--ink);
+  padding-bottom: 0.8vh;
+}
+.t-fp-dateline {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sepia-deep);
+  border-bottom: 1px solid var(--ink);
+  padding: 4px 2px;
+  margin-bottom: 1.2vh;
+}
+.t-paper--frontpage .t-title { text-align: center; font-size: clamp(30px, 4.4vw, 54px); line-height: 0.98; text-transform: uppercase; letter-spacing: 0.01em; margin: 0.6vh 0 1.2vh; }
+.t-fp-body { column-count: 2; column-gap: 2.2vw; column-rule: 1px solid rgba(43, 33, 20, 0.3); text-align: justify; hyphens: auto; }
+.t-fp-body::first-letter { font-family: var(--serif-display); font-weight: 700; font-size: 3em; float: left; line-height: 0.82; padding: 3px 7px 0 0; }
+.t-paper--frontpage .t-option-tag { color: var(--red); }
+
+/* ---- whip's note: small folded card, party letterhead, the hand ---- */
+.t-paper--whipnote { background: linear-gradient(160deg, #f5edd3, #e9dab2); transform: rotate(-0.6deg); padding: clamp(16px, 2.4vh, 26px) clamp(18px, 2.2vw, 30px); }
+.t-paper--whipnote::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 12px; background: linear-gradient(rgba(60, 45, 20, 0.12), transparent); pointer-events: none; }
+.t-whip-head { border-bottom: 2px solid var(--red); padding-bottom: 6px; margin-bottom: 1vh; }
+.t-whip-office { display: block; font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.t-whip-party { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); margin-top: 2px; }
+.t-whip-re { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.3vw, 15px); color: var(--sepia-deep); margin-bottom: 0.8vh; }
+.t-whip-note { font-family: var(--hand); font-size: clamp(20px, 2.6vh, 27px); line-height: 1.3; color: #46351c; transform: rotate(-0.5deg); }
+.t-whip-directive { font-family: var(--serif-body); font-weight: 600; font-size: clamp(15px, 1.6vw, 19px); margin-top: 1.4vh; }
+.t-whip-directive b {
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  border-bottom: 2px solid var(--red);
+  box-shadow: 0 3px 0 var(--red), 0 6px 0 var(--red);
+  padding-bottom: 1px;
+}
+.t-whip-ack { align-self: flex-end; margin-top: 2vh; }
+.t-paper--whipnote .t-title, .t-paper--whipnote .t-body { font-family: var(--hand); font-weight: 600; color: #46351c; }
+.t-paper--whipnote .t-title { font-size: clamp(22px, 3vh, 28px); }
+.t-paper--whipnote .t-body { font-size: clamp(19px, 2.6vh, 25px); line-height: 1.35; }
+
+/* ---- letter: cream stock, the hand, no chrome ---- */
+.t-paper--letter { background: radial-gradient(130% 120% at 20% 0%, #f8f0d9, #eddfba); padding: clamp(26px, 5vh, 52px) clamp(26px, 5vw, 60px); }
+.t-paper--letter .t-title { font-family: var(--hand); font-weight: 600; font-size: clamp(24px, 3.4vh, 32px); color: #3a2c16; transform: rotate(-0.4deg); }
+.t-paper--letter .t-body { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 2.6vh, 25px); line-height: 1.42; color: #46351c; }
+.t-letter-sig { font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 3vh, 30px); color: #3a2c16; text-align: right; transform: rotate(-1.4deg); margin-top: 1.6vh; }
+.t-paper--letter .t-options { border-top: none; }
+.t-paper--letter .t-option { background: transparent; border: none; border-bottom: 1px dashed var(--sepia); border-radius: 0; }
+.t-paper--letter .t-option-label { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 2.4vh, 24px); color: #5e3d17; }
+.t-paper--letter .t-option:hover { background: rgba(232, 176, 74, 0.14); }
+
+/* ---- memo & ultimatum: the typed office ---- */
+.t-paper--memo, .t-paper--ultimatum { background: linear-gradient(180deg, #f2ead0, #e7dab5); border-radius: 3px; }
+.t-paper--ultimatum { border: 3px double #1c1710; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(28, 23, 16, 0.35), inset 0 0 70px rgba(120, 90, 40, 0.12); }
+.t-memo-title { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: 0.34em; text-transform: uppercase; text-align: center; margin-bottom: 1.2vh; }
+.t-paper--ultimatum .t-memo-title { color: #1c1710; }
+.t-memo-fields { border-top: 2px solid var(--ink); margin-bottom: 1.2vh; }
+.t-memo-field { display: flex; gap: 10px; align-items: baseline; border-bottom: 1px solid rgba(43, 33, 20, 0.4); padding: 5px 2px; }
+.t-memo-field .k { flex: none; width: 4.5em; font-family: var(--mono); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); }
+.t-memo-field .v { font-family: var(--mono); font-size: clamp(12px, 1.3vw, 15px); }
+.t-paper--memo .t-body, .t-paper--ultimatum .t-body { font-family: var(--mono); font-size: clamp(13px, 1.35vw, 15px); line-height: 1.6; }
+.t-paper--memo .t-option-label, .t-paper--ultimatum .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 1.3vw, 15px); }
+.t-paper--ultimatum .t-options { border-top: 2px solid #1c1710; }
+
+/* ---- mandate: the engraved calling card ---- */
+.t-paper--mandate { background: radial-gradient(140% 130% at 50% 0%, #f7f1df, #eadfbe); text-align: center; padding: clamp(24px, 4vh, 44px) clamp(24px, 3.4vw, 44px); box-shadow: 0 20px 46px rgba(0, 0, 0, 0.6), inset 0 0 0 6px transparent; }
+.t-paper--mandate::before { content: ''; position: absolute; inset: 7px; border: 1px solid var(--sepia); border-radius: 4px; pointer-events: none; }
+.t-mandate-orn { font-family: var(--serif-display); font-size: clamp(16px, 2vh, 20px); color: var(--sepia); letter-spacing: 0.5em; text-indent: 0.5em; }
+.t-mandate-patron { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3.4vh, 36px); font-variant: small-caps; letter-spacing: 0.04em; margin: 0.6vh 0 0.2vh; }
+.t-paper--mandate .t-title { font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 1.2vh, 12px); letter-spacing: 0.3em; text-transform: uppercase; color: var(--sepia-deep); margin: 0 0 1.2vh; }
+.t-paper--mandate .t-body { text-align: center; font-style: italic; }
+.t-paper--mandate .t-options { border-top: none; align-items: center; }
+.t-paper--mandate .t-option { text-align: center; border-style: solid; border-color: var(--sepia); background: transparent; width: min(340px, 100%); }
+.t-paper--mandate .t-option-label { font-variant: small-caps; font-weight: 700; letter-spacing: 0.06em; }
+
+/* ============================ outcome & slips ============================ */
+
+.t-paper--outcome { background: linear-gradient(180deg, #f2ead0, #e7dab5); }
+.t-paper--outcome .t-title { padding-right: clamp(88px, 12vw, 140px); }
+.t-outcome-text { margin-top: 0.4vh; }
+.t-delta-ledger { margin-top: 1.4vh; border-top: 2px solid var(--ink); padding-top: 0.8vh; }
+.t-delta-row { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
+.t-delta-row .n { font-weight: 700; }
+.t-delta-row .n.up { color: var(--green); }
+.t-delta-row .n.down { color: var(--red); }
+.t-sketch { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.35vw, 16px); line-height: 1.45; color: var(--ink-soft); margin: 0.8vh 0 0; }
+.t-sketch::before { content: '— '; color: var(--sepia); }
+.t-dismiss { align-self: center; margin-top: 1.6vh; }
+
+/* ---- the division slip: The Record ∥ The Republic ---- */
+.t-paper--slip { background: radial-gradient(120% 120% at 18% 0%, var(--paper-1) 0%, var(--paper-2) 55%, var(--paper-3) 100%); }
+.t-slip-head { flex: none; border-bottom: 2px solid var(--red); padding-bottom: 0.8vh; margin-bottom: 1.2vh; padding-right: 110px; }
+.t-slip-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 2.6vw, 32px); line-height: 1.02; margin: 0.3vh 0 0; }
+.t-slip-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.2vw; }
+.t-slip-col { min-width: 0; padding: 0.2vh 0 1vh; }
+.t-slip-col + .t-slip-col { border-left: 1px dashed var(--rule); padding-left: 2.2vw; }
+.t-slip-sec { font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.15vw, 13px); letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); border-bottom: 1px solid var(--rule); padding-bottom: 4px; margin-bottom: 0.9vh; }
+.t-slip-vote { font-family: var(--serif-display); font-weight: 700; font-size: clamp(17px, 1.9vw, 23px); margin-bottom: 0.6vh; }
+.t-slip-line { font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); line-height: 1.45; color: var(--ink-soft); margin: 0 0 0.5vh; }
+.t-slip-line .n { font-family: var(--mono); font-weight: 700; font-size: 0.88em; }
+.t-slip-line .n.up { color: var(--green); }
+.t-slip-line .n.down { color: var(--red); }
+.t-slip-figures { display: flex; align-items: baseline; gap: 1.4vw; font-family: var(--mono); font-weight: 700; margin-bottom: 0.8vh; }
+.t-slip-figures .fig { font-size: clamp(22px, 2.8vw, 34px); }
+.t-slip-figures .cap { font-size: 10px; letter-spacing: 0.18em; color: var(--sepia); }
+.t-slip-figures .ayes { color: var(--green); }
+.t-slip-figures .noes { color: var(--red); }
+.t-slip-bloc-rows { border-top: 1px solid var(--rule); margin-bottom: 0.8vh; }
+.t-slip-bloc-row { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: clamp(11px, 1.1vw, 12px); padding: 3px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
+.t-slip-bloc-row .bn { text-transform: uppercase; letter-spacing: 0.08em; }
+.t-slip-foot { flex: none; display: flex; align-items: center; justify-content: center; gap: 14px; border-top: 1px dashed var(--rule); padding-top: 1vh; margin-top: 0.4vh; }
+
+/* ---- the ribbon: one line, tap to file ---- */
+.t-ribbon-wrap { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 0 2vw 12vh; pointer-events: none; }
+.t-ribbon {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(860px, 96%);
+  background: linear-gradient(180deg, #f2e7c8, #e4d4a8);
+  border: 1px solid var(--rule);
+  border-left: 5px solid var(--sepia);
+  border-radius: 6px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+  padding: 10px 18px;
+  color: var(--ink);
+  text-align: left;
+  animation: t-rise 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes t-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+.t-ribbon .stamp { flex: none; font-size: 10px; padding: 3px 8px; border-width: 2px; transform: rotate(-4deg); }
+.t-ribbon-figs { flex: none; font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.3vw, 15px); letter-spacing: 0.06em; }
+.t-ribbon-title { min-width: 0; font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.3vw, 15px); color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-ribbon-hint { flex: none; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); }
+
+/* ============================ the bargaining sheet ============================ */
+
+.t-paper--sheet {
+  background:
+    linear-gradient(90deg, transparent 0 46px, rgba(158, 43, 37, 0.28) 46px 47px, transparent 47px),
+    linear-gradient(180deg, #f2ead0, #e6d8b0);
+  padding-left: clamp(56px, 6vw, 74px);
+}
+.t-sheet-letterhead { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 2.5vw, 30px); font-variant: small-caps; letter-spacing: 0.05em; text-align: center; }
+.t-sheet-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sepia-deep); text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 1.2vh; }
+.t-paper--sheet .t-kick { text-align: center; margin-bottom: 0.8vh; }
+.t-sheet-terms { margin: 1.2vh 0 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 0.8vh; }
+.t-sheet-terms li { font-family: var(--serif-body); font-size: clamp(13px, 1.35vw, 16px); line-height: 1.5; color: var(--ink-soft); }
+.t-sheet-terms li::marker { font-family: var(--mono); font-weight: 700; color: var(--red); }
+.t-term-label { font-weight: 700; font-variant: small-caps; color: var(--ink); }
+.t-sheet-signatures { flex: none; display: flex; gap: 2.4vw; margin-top: 2vh; }
+.t-sig { flex: 1; min-width: 0; text-align: center; }
+.t-sig-scrawl { display: block; height: clamp(30px, 4.2vh, 42px); font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 3.2vh, 30px); color: #3a2c16; transform: rotate(-2deg); }
+.t-sig-scrawl.blank { color: transparent; }
+.t-sig-rule { border-top: 1.5px solid var(--ink); margin-top: -4px; }
+.t-sig-cap { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia-deep); margin-top: 4px; }
+.t-sheet-actions { flex: none; display: flex; justify-content: center; gap: 10px; margin-top: 1.8vh; }
+
+/* ============================ shared buttons ============================ */
+
+.t-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: 6px;
+  padding: 9px 16px;
+  background: rgba(158, 43, 37, 0.06);
+  transition: background 0.12s;
+}
+.t-btn:hover { background: rgba(158, 43, 37, 0.16); }
+.t-btn.solid { color: var(--paper-1); background: linear-gradient(#a5302a, #7e1f1b); border-color: #5e1714; }
+.t-btn.quiet { color: var(--sepia-deep); border-color: var(--sepia); background: transparent; }
+.t-btn.quiet:hover { background: rgba(122, 92, 46, 0.12); }
+
+/* ============================ the ledger ============================ */
+
+.t-ledger-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+.t-paper--ledger { width: 100%; max-width: 1100px; height: 100%; animation: t-settle 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.t-ledger-head { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; border-bottom: 2px solid var(--red); padding-bottom: 1vh; margin-bottom: 1.2vh; }
+.t-ledger-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3.4vw, 42px); font-variant: small-caps; line-height: 1; margin: 0.3vh 0 0.2vh; }
+.t-ledger-sub { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.25vw, 14px); color: var(--sepia-deep); }
+.t-ledger-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent; }
+.t-ledger-scroll::-webkit-scrollbar { width: 5px; }
+.t-ledger-scroll::-webkit-scrollbar-thumb { background: rgba(122, 92, 46, 0.5); border-radius: 3px; }
+.t-ledger-sec { font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.15vw, 13px); letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); border-bottom: 1px solid var(--rule); padding-bottom: 4px; margin: 2vh 0 1vh; }
+.t-ledger-sec:first-child { margin-top: 0.4vh; }
+.t-ledger-sec .note { float: right; font-family: var(--serif-body); font-style: italic; font-weight: 400; font-size: 12px; letter-spacing: normal; text-transform: none; color: var(--sepia-deep); }
+
+/* pollster's memo rows: figure + threshold line */
+.t-memo-row { display: flex; align-items: baseline; gap: 12px; padding: 6px 2px; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
+.t-memo-k { flex: none; width: clamp(96px, 11vw, 130px); font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 1.05vw, 12px); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia-deep); }
+.t-memo-n { flex: none; width: 3.2em; font-family: var(--mono); font-weight: 700; font-size: clamp(17px, 1.9vw, 22px); text-align: right; }
+.t-memo-note { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.25vw, 14px); color: var(--sepia-deep); }
+.t-memo-row.alert .t-memo-n, .t-memo-row.alert .t-memo-note { color: var(--red); }
+.t-memo-row.alert .t-memo-note { font-weight: 600; }
+
+/* national mood mini-rows */
+.t-mood-row { display: flex; align-items: baseline; gap: 12px; padding: 4px 2px; border-bottom: 1px dotted rgba(122, 92, 46, 0.35); }
+.t-mood-k { flex: none; width: clamp(110px, 13vw, 150px); font-family: var(--mono); font-size: clamp(10px, 1.05vw, 11px); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sepia-deep); }
+.t-mood-n { flex: none; width: 3.6em; font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.3vw, 14px); text-align: right; }
+.t-mood-read { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.2vw, 13px); color: var(--sepia-deep); }
+.t-mood-row.alert .t-mood-n, .t-mood-row.alert .t-mood-read { color: var(--red); }
+
+/* bloc correspondence cards */
+.t-corr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.t-corr { position: relative; background: rgba(243, 231, 201, 0.72); border: 1px solid var(--rule); border-left: 4px solid var(--sepia); border-radius: 6px; padding: 11px 14px; overflow: hidden; }
+.t-corr-name { font-family: var(--serif-display); font-weight: 700; font-size: clamp(16px, 1.7vw, 21px); font-variant: small-caps; line-height: 1.05; }
+.t-corr-party { float: right; font-family: var(--mono); font-weight: 700; font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--paper-1); background: var(--sepia-deep); border-radius: 3px; padding: 3px 6px; margin-left: 8px; }
+.t-corr-figs { font-family: var(--mono); font-size: clamp(10px, 1.05vw, 11px); letter-spacing: 0.1em; text-transform: uppercase; color: var(--sepia-deep); margin: 5px 0 6px; }
+.t-corr-figs .hot { color: var(--red); font-weight: 700; }
+.t-corr-tone { font-family: var(--serif-body); font-size: clamp(12px, 1.25vw, 14px); line-height: 1.45; color: var(--ink-soft); margin: 0; }
+.t-corr-warn { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-top: 6px; }
+.t-corr-grudge { font-family: var(--hand); font-size: clamp(15px, 1.8vh, 18px); color: var(--red-bright); transform: rotate(-1.2deg); margin-top: 6px; }
+.t-corr--chill { border-left-color: #6b6558; background: rgba(226, 219, 199, 0.7); filter: saturate(0.55); }
+.t-corr--severed { border: 1px solid #1c1710; border-left: 4px solid #1c1710; filter: saturate(0.3); }
+.t-corr--severed::after {
+  content: 'CORRESPONDENCE SUSPENDED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-7deg);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(28, 23, 16, 0.65);
+  border: 2px solid rgba(28, 23, 16, 0.55);
+  border-radius: 4px;
+  padding: 4px 10px;
+  pointer-events: none;
+}
+
+/* promises */
+.t-promise { display: flex; align-items: baseline; gap: 12px; background: rgba(243, 231, 201, 0.72); border: 1px solid var(--rule); border-left: 4px solid var(--gold); border-radius: 6px; padding: 9px 13px; margin-bottom: 8px; }
+.t-promise-bloc { flex: none; font-family: var(--mono); font-weight: 700; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); background: rgba(122, 92, 46, 0.16); border-radius: 3px; padding: 2px 7px; }
+.t-promise-label { flex: 1; min-width: 0; font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); color: var(--ink-soft); }
+.t-promise-due { flex: none; font-family: var(--mono); font-size: clamp(10px, 1.05vw, 11px); letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); }
+.t-ledger-empty { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.25vw, 14px); color: var(--sepia-deep); margin: 0.4vh 0; }
+
+/* pinned mandate cards */
+.t-mandate-pins { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.t-mandate-pin { position: relative; background: radial-gradient(140% 130% at 50% 0%, #f7f1df, #eadfbe); border: 1px solid var(--rule); border-radius: 5px; text-align: center; padding: 14px 16px; }
+.t-mandate-pin::before { content: ''; position: absolute; inset: 5px; border: 1px solid var(--sepia); border-radius: 3px; pointer-events: none; }
+.t-mandate-pin .pt-patron { font-family: var(--serif-display); font-weight: 700; font-size: clamp(16px, 1.7vw, 20px); font-variant: small-caps; }
+.t-mandate-pin .pt-title { font-family: var(--mono); font-weight: 700; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--sepia-deep); margin: 2px 0 6px; }
+.t-mandate-pin .pt-text { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.2vw, 13px); line-height: 1.4; color: var(--ink-soft); }
+
+/* redacted clippings (buried scandals) */
+.t-clipping { position: relative; background: linear-gradient(180deg, #eee8d4, #e2d9ba); border: 1px solid var(--rule); padding: 12px 14px 10px; max-width: 520px; margin-bottom: 10px; transform: rotate(-0.5deg); }
+.t-clipping-kick { font-family: var(--mono); font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia-deep); margin-bottom: 7px; }
+.t-redact { display: block; height: 9px; background: #1c1710; border-radius: 1px; margin: 5px 0; }
+.t-clipping-note { font-family: var(--hand); font-size: clamp(15px, 1.9vh, 19px); color: var(--red-bright); transform: rotate(-1.4deg); margin-top: 8px; }
+
+/* ============================ mobile ============================ */
+
+@media (max-width: 760px) {
+  .t-artifact-wrap { padding: 1.6vh 3vw; }
+  .t-paper { padding: 14px 16px; }
+  .t-paper--letter { padding: 22px 20px; }
+  .t-paper--sheet { padding-left: 40px; background: linear-gradient(90deg, transparent 0 28px, rgba(158, 43, 37, 0.28) 28px 29px, transparent 29px), linear-gradient(180deg, #f2ead0, #e6d8b0); }
+  .t-title { font-size: clamp(20px, 6vw, 28px); }
+  .t-tg-route { padding-right: 72px; }
+  .t-paper--outcome .t-title { padding-right: 80px; }
+  .t-body { font-size: clamp(14px, 4vw, 16px); }
+  .t-paper--frontpage .t-title { font-size: clamp(24px, 8vw, 34px); }
+  .t-fp-body { column-count: 1; }
+  .t-fp-masthead { font-size: clamp(20px, 7vw, 30px); }
+  .t-option-label { font-size: clamp(14px, 4vw, 16px); }
+  .t-margin-note { font-size: clamp(16px, 4.6vw, 19px); }
+
+  /* precedents move to the verso; the folded corner appears */
+  .t-precfoot { display: none; }
+  .t-fold { display: block; }
+  .t-fold-hint { display: block; }
+
+  /* the slip stacks its two ledgers */
+  .t-slip-cols { grid-template-columns: 1fr; }
+  .t-slip-col + .t-slip-col { border-left: none; border-top: 1px dashed var(--rule); padding-left: 0; padding-top: 1.2vh; }
+  .t-slip-head { padding-right: 84px; }
+  .t-slip-title { font-size: clamp(18px, 5.6vw, 24px); }
+
+  .t-ribbon-wrap { padding-bottom: 8vh; }
+  .t-ribbon { flex-wrap: wrap; gap: 8px 12px; }
+  .t-ribbon-title { white-space: normal; }
+
+  .t-sheet-signatures { gap: 4vw; }
+
+  .t-ledger-wrap { padding: 1.6vh 3vw; }
+  .t-ledger-title { font-size: clamp(22px, 7.5vw, 30px); }
+  .t-ledger-head { flex-wrap: wrap; }
+  .t-memo-k { width: 92px; }
+  .t-memo-row, .t-mood-row { flex-wrap: wrap; }
+  .t-mood-k { width: 108px; }
+  .t-corr-grid, .t-mandate-pins { grid-template-columns: 1fr; }
+}

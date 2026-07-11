@@ -1,0 +1,38 @@
+{
+ "vane": {
+  "file": "terms/cast/vane.jpg",
+  "source": "File:Robert Farquharson. Coloured lithograph by L. Ward (Spy), 18 Wellcome V0001871.jpg",
+  "license": "CC BY 4.0",
+  "bytes": 852780
+ },
+ "pollster": {
+  "file": "terms/cast/pollster.jpg",
+  "source": "File:Sir John Lubbock, Baron Avebury. Coloured lithograph after ( Wellcome V0000250.jpg",
+  "license": "Public domain",
+  "bytes": 998671
+ },
+ "whip": {
+  "file": "terms/cast/whip.jpg",
+  "source": "File:Akers-Douglas.JPG",
+  "license": "Public domain",
+  "bytes": 48246
+ },
+ "corran": {
+  "file": "terms/cast/corran.jpg",
+  "source": "File:Alfred Charles William Harmsworth, Vanity Fair, 1895-05-16.jpg",
+  "license": "Public domain",
+  "bytes": 56653
+ },
+ "officer": {
+  "file": "terms/cast/officer.jpg",
+  "source": "File:William Court Gully Vanity Fair 17 September 1896.jpg",
+  "license": "Public domain",
+  "bytes": 253534
+ },
+ "spouse": {
+  "file": "terms/cast/spouse.jpg",
+  "source": "File:Portrait of Lady Randolph Churchill.jpg",
+  "license": "Public domain",
+  "bytes": 462905
+ }
+}
