@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { signed } from '../../../lib/format'
 import type { Bloc, ElectionNight as ElectionNightData } from '../../types'
+import { characters } from '../../data/characters'
+import { electionExchange } from '../../data/scenes'
+import { DialogueScene } from '../dialogue/DialogueScene'
 
 /** Election night: the count comes in slip by slip, then the returning
  *  officer's note itemises the personal seat — the boss fight ends legibly. */
@@ -17,11 +20,26 @@ export function ElectionNight({
 }) {
   // 0..swings.length reveals slips; the step after reveals the officer's note.
   const [revealed, setRevealed] = useState(0)
+  // A short exchange with the officer plays before the count is read.
+  const [exchangeDone, setExchangeDone] = useState(false)
+  const exchange = useMemo(() => electionExchange(night.seat.held), [night.seat.held])
   const total = night.swings.length + 1
   const done = revealed >= total
 
   const blocName = (id: string) => blocs.find((b) => b.id === id)?.name ?? id
   const advance = () => setRevealed((r) => Math.min(r + 1, total))
+
+  if (!exchangeDone) {
+    return (
+      <DialogueScene
+        scene={{ beats: exchange }}
+        characters={characters}
+        header="Election Night · Halloway"
+        onChoice={() => {}}
+        onDone={() => setExchangeDone(true)}
+      />
+    )
+  }
 
   return (
     <div className="desk t-night" onClick={advance}>

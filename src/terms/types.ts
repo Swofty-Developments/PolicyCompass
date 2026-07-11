@@ -251,9 +251,30 @@ export interface Act {
 export interface Character {
   id: string
   name: string
-  role: 'rival' | 'spouse' | 'patron' | 'whip'
+  role: 'rival' | 'spouse' | 'patron' | 'whip' | 'officer' | 'pollster'
   blurb: string
   composites: string[]
+  /** Cast cutout path under public/, e.g. '/terms/cast/whip.jpg' */
+  portrait?: string
+}
+
+// ---- dialogue scenes -----------------------------------------------------------
+
+/** One spoken beat. `speaker` is a characterId, or 'narrator' | 'player'. */
+export interface DialogueLine {
+  speaker: string
+  text: string
+}
+
+/** A beat that pauses the scene for the player's reply. */
+export interface DialogueChoice {
+  prompt: string
+  options: { id: string; label: string; detail?: string }[]
+}
+
+export interface DialogueScene {
+  id: string
+  beats: (DialogueLine | DialogueChoice)[]
 }
 
 export interface Scenario {

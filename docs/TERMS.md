@@ -295,10 +295,12 @@ marginal as a conversation, not a form.
   scenario data (`data/scenes.ts`), are staged like events (authored slots or state
   gates), and their choices can resolve setup decisions (party, seat), branch options, or
   plain EffectSets — one system, no parallel machinery.
-- **v1 scope:** the prologue scene (party + seat resolved conversationally), a short
-  post-first-scandal Margaret scene, and the election-night victory/defeat exchange with
-  the returning officer. Everything else stays paper. Characters already exist as data;
-  scenes only reference `characterId`s and portrait paths.
+- **v1 scope:** the prologue scene (party + seat resolved conversationally) and the
+  election-night victory/defeat exchange with the returning officer — both presentation
+  over existing state, no reducer changes, so event-sourcing is untouched (scene
+  tap-through is not an action; only the terminal choices feed `start()` / `advance`).
+  Margaret's post-scandal beat stays a letter in v1 and graduates to a scene next pass.
+  Characters carry `portrait` paths into `public/terms/cast/`.
 - Scene copy follows the tone rules: composites, dossier register, wit in character
   voice. Scenes are skippable (tap-through); no timing pressure.
 
