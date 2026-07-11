@@ -142,7 +142,10 @@ export function takeSpawnSeats(
   partyId: string,
 ): { blocId: string; taken: number }[] {
   const seed = emergent.emergent?.seedSeats ?? 12
-  const donors = blocs.filter((b) => b.active && b.id !== emergent.id && b.seats > 0)
+  // Spec: seed seats come from the founding blocs only — a rising radical
+  // flank must not cannibalise the opposite flank's seats.
+  const founding = new Set(scenario.blocs.filter((b) => !b.emergent).map((b) => b.id))
+  const donors = blocs.filter((b) => b.active && founding.has(b.id) && b.seats > 0)
   const weights = donors.map((d) => {
     const vec = scenario.blocs.find((b) => b.id === d.id)?.vector
     return vec ? Math.max(0.05, vectorAdjacency(vec, emergent.vector)) : 0.05

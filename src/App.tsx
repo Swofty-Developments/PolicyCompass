@@ -118,7 +118,9 @@ export default function App() {
   }
 
   return (
-    <AnimatePresence>
+    // mode="wait": the exiting surface (whose window key listeners are live
+    // until unmount) must be gone before the next one appears.
+    <AnimatePresence mode="wait">
       <motion.div
         key={`${mode}:${phase}`}
         style={{ position: 'fixed', inset: 0 }}

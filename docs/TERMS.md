@@ -85,7 +85,8 @@ All simulation state lives in `TermsState`; every transition is a pure reducer.
   `P(vote | pre-vote mean) < 0.35` on the primary axis, apply
   `−round(9 × max(certainty, 0.4))` — no hard certainty gate, so incoherence always
   costs and costs more once the record is established. Voting in line at certainty > 0.55
-  recovers `+2` (cap 100). The spouse's letters are the only event-driven recovery
+  recovers `+2` (cap 100; "in line" means clearly so — `P(vote | mean) ≥ 0.65` — so
+  coin-flip votes neither pay nor recover). The spouse's letters are the only event-driven recovery
   (`+5` — tuned down from +10 after simulation showed four letters refunding a
   coin-flip voter's entire weathervane drain). Consequences: `< 40` worsens scandal gambles and election swing (−3); `≥ 70`
   slows expulsion (§ Endings) and softens the party's briefing (defiance trust cost −1
@@ -303,6 +304,30 @@ marginal as a conversation, not a form.
   Characters carry `portrait` paths into `public/terms/cast/`.
 - Scene copy follows the tone rules: composites, dossier register, wit in character
   voice. Scenes are skippable (tap-through); no timing pressure.
+
+## The desk (presentation & disclosure)
+
+Terms is played on a desk, not in an app — and on a large screen the desk is wide.
+
+- **Documents scale to the viewer.** Artifacts are sized like papers held close: on
+  desktop a memo or front page stands ~55–70vh tall with body type ~1.3–1.5rem
+  (EB Garamond) and hand annotations ≥1.15rem (Caveat is illegible small); dialogue
+  portraits stand ~70vh with the spoken line on a wide slip (≤68ch, ~1.4rem). Type
+  hierarchy keeps ≥1.25 scale steps. Mobile keeps the compact sizing.
+- **Desk rails (≥1200px).** The political state is never a separate page on desktop.
+  During run stages the centre paper is flanked by pinned index-card rails: left,
+  **The House** — each bloc's seats, relations tone (word + small printed figure),
+  fervour as temperature; right, **The Standing** — the pollster's figures beside
+  their threshold lines ("Confidence 24 — the whips talk at twenty"), promises with
+  falls-due counts, pinned mandates, redacted clippings. Rails are passive paper (no
+  focus traps, no key handlers); rows that changed on the last division glow briefly.
+  Below 1200px the rails collapse into the docket strip's tap-to-open ledger page.
+- **The desk scales up, Frostpunk-style.** Nothing but the paper for the opening
+  divisions; the Standing rail fades in when the pollster's memo arrives; the House
+  rail when the whip first leans on you; promise rows with the first promise, mandate
+  cards when held, clippings when buried. Disclosure derives from run state (events
+  seen, promises held) — never wall-clock or component-local memory — so replays and
+  resumes reveal identically.
 
 ## Architecture
 

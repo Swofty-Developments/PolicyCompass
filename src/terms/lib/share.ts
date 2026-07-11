@@ -1,4 +1,5 @@
 import { AXIS_IDS, type AxisVector } from '../../types'
+import { scenario } from '../data/scenario'
 import type { EndingStamp, Obituary, TermsSetup } from '../types'
 
 /** Decoded #t= payload — enough to render a read-only obituary card and to
@@ -67,11 +68,16 @@ export function decodeTermsShare(hash: string): TermsShare | null {
       g?: number[]
     }
     if (typeof obj.d !== 'number' || typeof obj.p !== 'string') return null
+    // A challenge starts a real run from this payload: only a playable party
+    // and a sane seed may pass (a tampered link must not seat a radical bloc).
+    if (!Number.isInteger(obj.d) || obj.d < 0 || obj.d > 0xffffffff) return null
+    if (!scenario.blocs.some((b) => b.playable && b.id === obj.p)) return null
     const stamp = STAMPS.find((s) => s === obj.e)
     if (!stamp) return null
+    const clamp1 = (n: unknown) => Math.max(-1, Math.min(1, typeof n === 'number' ? n : 0))
     const axisMeans = {} as AxisVector
     AXIS_IDS.forEach((a, i) => {
-      axisMeans[a] = obj.v?.[i] ?? 0
+      axisMeans[a] = clamp1(obj.v?.[i])
     })
     const g = obj.g ?? []
     return {
@@ -80,7 +86,7 @@ export function decodeTermsShare(hash: string): TermsShare | null {
       branchPicks: Array.isArray(obj.b) ? obj.b.filter((x) => typeof x === 'string') : [],
       stamp,
       termsServed: obj.n ?? 0,
-      overall: obj.o ?? 0,
+      overall: clamp1(obj.o),
       axisMeans,
       brag: {
         termsServed: g[0] ?? obj.n ?? 0,

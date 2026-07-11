@@ -17,26 +17,26 @@ export function newTermsRunId(): string {
   return `term-${Date.now()}-${Math.floor(Math.random() * 1e6)}`
 }
 
-export type DroppedReason = 'schema' | 'bills' | 'corrupt'
+export type DroppedReason = 'schema' | 'bills' | 'scenario' | 'corrupt'
 
-/** The single in-progress career. Schema/bills mismatches are dropped (the
- *  docket is pinned against the live pool; a stale run cannot replay) — the
- *  stale blob is cleared so the drop is reported exactly once. */
-export function loadSavedRunResult(): { run: SavedTermsRun | null; dropped: DroppedReason | null } {
+/** The single in-progress career. Schema/bills/scenario mismatches are dropped
+ *  (the docket is pinned against the live pool; a stale run cannot replay).
+ *  Pure read — no side effects, safe in render/StrictMode; the caller clears
+ *  the stale blob in an effect so the drop is reported exactly once. */
+export function loadSavedRunResult(scenarioId?: string): {
+  run: SavedTermsRun | null
+  dropped: DroppedReason | null
+} {
   try {
     const raw = localStorage.getItem(RUN_KEY)
     if (!raw) return { run: null, dropped: null }
-    const drop = (dropped: DroppedReason) => {
-      clearSavedRun()
-      return { run: null, dropped }
-    }
     const run = JSON.parse(raw) as SavedTermsRun
-    if (!run || !Array.isArray(run.actions)) return drop('corrupt')
-    if (run.schemaVersion !== TERMS_SCHEMA_VERSION) return drop('schema')
-    if (run.billsVersion !== BILLS_VERSION) return drop('bills')
+    if (!run || !Array.isArray(run.actions)) return { run: null, dropped: 'corrupt' }
+    if (run.schemaVersion !== TERMS_SCHEMA_VERSION) return { run: null, dropped: 'schema' }
+    if (run.billsVersion !== BILLS_VERSION) return { run: null, dropped: 'bills' }
+    if (scenarioId && run.scenarioId !== scenarioId) return { run: null, dropped: 'scenario' }
     return { run, dropped: null }
   } catch {
-    clearSavedRun()
     return { run: null, dropped: 'corrupt' }
   }
 }

@@ -44,13 +44,13 @@ const leadershipBranch: Branch = {
   id: 'branch-leadership',
   title: 'The Leadership Falls Vacant',
   letter:
-    'The leader is finished — the benches knew it before he did. Edmund Vane declared within the hour; he has the papers, half the front bench, and the smile. There is one other name the men keep saying quietly, and it is yours. Stand, and it is you or Vane before the whole party. Serve, and you hold high office under him owing nothing worse than loyalty. The ballot is Thursday.',
+    'The leader is finished — the benches knew it before he did. Edmund Vane declared within the hour; he has the papers, half the front bench, and the smile. There is one other name the men keep saying quietly, and it is yours. Declare, and the benches will count themselves before any ballot is printed — Vane does not fight counts he has already lost. Serve, and you hold high office under him owing nothing worse than loyalty. Thursday, either way.',
   byline: '— The Chief Whip',
   options: [
     {
       id: 'stand-vane',
       label: 'Stand against Vane',
-      detail: 'Contest the leadership. The party is yours to whip, and the third term is fought from the front.',
+      detail: 'Declare, and Vane withdraws before the count. The party is yours to whip, and the third term is fought from the front.',
       office: 'leader',
       nextActId: 'act-3',
     },
