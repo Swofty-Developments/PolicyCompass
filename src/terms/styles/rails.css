@@ -5,7 +5,14 @@
    cards on the dark desk, never parchment competing with the centre document.
    ============================================================================ */
 
-.t-deskgrid { display: grid; grid-template-columns: minmax(0, 1fr); }
+.t-deskgrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
 .t-desk-centre { position: relative; display: flex; min-width: 0; min-height: 0; }
 .t-rail { display: none; }
 

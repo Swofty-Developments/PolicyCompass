@@ -489,7 +489,7 @@
 /* Documents sized like papers held close: the chassis stands ~55–70vh tall,
    body reads at ~1.4rem over ≤72ch, hand notes stay legible. */
 
-@media (min-width: 1200px) {
+@media (min-width: 980px) {
   .t-artifact-wrap { gap: 1.6vh; padding: 3vh 2vw; }
 
   .t-paper {

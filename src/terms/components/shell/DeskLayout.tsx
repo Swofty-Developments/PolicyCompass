@@ -29,17 +29,23 @@ export function DeskLayout({
   onOpenLedger: () => void
   children: ReactNode
 }) {
+  // The grid is a child of .desk, never the same element: .desk declares
+  // display:flex and the winner would otherwise depend on stylesheet order.
   return (
-    <div className="desk t-deskgrid">
-      <aside className="t-rail t-rail--house" aria-label="The House">
-        {houseDisclosed(state) && <HouseRail state={state} scenario={scenario} onOpenLedger={onOpenLedger} />}
-      </aside>
-      <div className="t-desk-centre">{children}</div>
-      <aside className="t-rail t-rail--standing" aria-label="The Standing">
-        {standingDisclosed(state) && (
-          <StandingRail state={state} scenario={scenario} onOpenLedger={onOpenLedger} />
-        )}
-      </aside>
+    <div className="desk">
+      <div className="t-deskgrid">
+        <aside className="t-rail t-rail--house" aria-label="The House">
+          {houseDisclosed(state) && (
+            <HouseRail state={state} scenario={scenario} onOpenLedger={onOpenLedger} />
+          )}
+        </aside>
+        <div className="t-desk-centre">{children}</div>
+        <aside className="t-rail t-rail--standing" aria-label="The Standing">
+          {standingDisclosed(state) && (
+            <StandingRail state={state} scenario={scenario} onOpenLedger={onOpenLedger} />
+          )}
+        </aside>
+      </div>
     </div>
   )
 }
