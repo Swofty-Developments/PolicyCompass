@@ -32,7 +32,12 @@
 .peek.p2 { transform: rotate(2.4deg) translateY(8px) scale(0.985); opacity: 0.4; }
 .peek.p1 { transform: rotate(-1.8deg) translateY(4px) scale(0.992); opacity: 0.6; }
 
-.cardwrap { position: relative; width: 100%; height: 100%; max-width: 1240px; display: flex; cursor: grab; will-change: transform; touch-action: pan-y; }
+/* touch-action none so the downward abstain drag reaches the card on touch. An
+   overflowing bill body still scrolls natively — the browser intersects touch-action
+   only up to the nearest scroller (.b-scroll sits below this element), and a scroll
+   that latches pointer-cancels the drag, so reading can't cast an accidental abstain.
+   pan-y here would instead let the browser cancel every vertical drag. */
+.cardwrap { position: relative; width: 100%; height: 100%; max-width: 1240px; display: flex; cursor: grab; will-change: transform; touch-action: none; }
 .cardwrap:active { cursor: grabbing; }
 .cardinner { width: 100%; height: 100%; }
 /* the next file promotes up out of the docket (the blank sheet rises)... */
@@ -55,3 +60,26 @@
 }
 .stamp-overlay.ratify { right: 8%; color: var(--green); border-color: var(--green); transform: rotate(-14deg); }
 .stamp-overlay.strike { left: 8%; color: var(--red); border-color: var(--red); transform: rotate(12deg); }
+.stamp-overlay.abstain { left: 50%; top: auto; bottom: 16%; color: var(--sepia); border-color: var(--sepia); transform: translateX(-50%) rotate(-5deg); }
+
+/* conviction sub-line: "reluctantly" in the commit band, crossfades to firm */
+.stamp-sub { display: block; position: relative; height: 1.3em; margin-top: 2px; font-size: clamp(13px, 1.2vw, 18px); letter-spacing: 0.22em; text-align: center; }
+.stamp-sub span { position: absolute; inset: 0; }
+.stamp-sub .soft { font-style: italic; font-weight: 400; text-transform: lowercase; letter-spacing: 0.12em; }
+
+/* ---- the record slip (post-vote provenance reveal) ---- */
+.reveal-scrim { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; padding: 4vh 4vw; background: rgba(12, 8, 4, 0.6); cursor: pointer; }
+.reveal-slip { width: min(600px, 100%); max-height: 86vh; overflow: auto; padding: clamp(22px, 4vh, 36px) clamp(24px, 3vw, 40px) clamp(16px, 2.6vh, 26px); }
+.reveal-stamp {
+  position: absolute; top: 16px; right: 18px;
+  font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase;
+  border: 3px solid; border-radius: 4px; padding: 5px 12px; transform: rotate(6deg); opacity: 0.9;
+}
+.reveal-stamp.ratified { color: var(--green); border-color: var(--green); }
+.reveal-stamp.struck { color: var(--red); border-color: var(--red); }
+.reveal-stamp.abstained { color: var(--sepia); border-color: var(--sepia); }
+.reveal-slip .r-title { font-family: var(--serif-body); font-weight: 600; font-size: 15px; color: var(--sepia-deep); margin: 12px 0 16px; padding-right: 130px; }
+.reveal-slip .r-sponsor { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3vw, 38px); line-height: 1.02; margin: 0; }
+.reveal-slip .r-origin { font-family: var(--mono); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); margin: 8px 0 14px; }
+.reveal-slip .r-note { font-family: var(--serif-body); font-weight: 500; line-height: 1.55; color: var(--ink-soft); border-top: 1px dashed var(--rule); padding-top: 12px; margin: 0; }
+.reveal-slip .r-next { margin-top: 22px; padding-top: 10px; border-top: 1px dashed var(--rule); font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sepia); text-align: center; }

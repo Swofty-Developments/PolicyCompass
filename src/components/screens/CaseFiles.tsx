@@ -29,7 +29,7 @@ export function CaseFiles({
             <div className={'casefile' + (r.finished ? ' sealed' : '')} key={r.id}>
               <button className="cf-main" onClick={() => onResume(r)}>
                 <div className="cf-status">{r.finished ? 'Verdict sealed' : 'In session'}</div>
-                <div className="cf-prog">{r.finished ? `${done} bills judged` : `${done} / ${r.target} bills`}</div>
+                <div className="cf-prog">{r.finished ? `${done} bills judged` : `${done} of ≤${r.target} bills`}</div>
                 <div className="cf-date">{fmtDate(r.updatedAt)}</div>
               </button>
               <div className="cf-actions">

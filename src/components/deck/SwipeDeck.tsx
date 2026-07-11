@@ -1,5 +1,5 @@
 import { useMotionValue, useTransform } from 'framer-motion'
-import type { Bill } from '../../types'
+import type { Bill, Conviction, VoteVerdict } from '../../types'
 import { SwipeCard } from './SwipeCard'
 import { SwipeGutter } from './SwipeGutter'
 import '../../styles/deck.css'
@@ -7,13 +7,15 @@ import '../../styles/deck.css'
 export function SwipeDeck({
   bill,
   billNumber,
-  total,
+  maxTarget,
+  locked,
   onVote,
 }: {
   bill: Bill
   billNumber: number
-  total: number
-  onVote: (ratified: boolean) => void
+  maxTarget: number
+  locked: boolean
+  onVote: (input: { verdict: VoteVerdict; conviction?: Conviction }) => void
 }) {
   const dragX = useMotionValue(0)
   const leftGlow = useTransform(dragX, [-200, -20], [0.85, 0])
@@ -28,7 +30,7 @@ export function SwipeDeck({
         <div className="peek p1" />
         {/* keyed by bill.id → the old card unmounts (already off-screen) and the next
             card mounts and promotes up from the docket. No AnimatePresence, no drift. */}
-        <SwipeCard key={bill.id} bill={bill} billNumber={billNumber} total={total} dragX={dragX} onCommit={(dir) => onVote(dir > 0)} />
+        <SwipeCard key={bill.id} bill={bill} billNumber={billNumber} maxTarget={maxTarget} dragX={dragX} locked={locked} onCommit={onVote} />
       </div>
 
       <SwipeGutter side="r" label="Ratify" glow={rightGlow} />

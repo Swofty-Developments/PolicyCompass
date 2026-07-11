@@ -25,7 +25,7 @@ export interface SessionConfig {
   certaintyTarget: number
 }
 
-export const DEFAULT_CONFIG: SessionConfig = { min: 10, max: 18, certaintyTarget: 0.6 }
+export const DEFAULT_CONFIG: SessionConfig = { min: 10, max: 18, certaintyTarget: 0.2 }
 
 function pickNext(posteriors: Posteriors, bills: Bill[], served: Set<string>, position: number): Bill | null {
   if (position >= PROBE_EVERY && position % PROBE_EVERY === 0) {

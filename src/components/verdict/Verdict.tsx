@@ -26,13 +26,14 @@ export function Verdict({ state, onHome, onNewRun }: { state: SessionState; onHo
   const arch = nearestArchetype(uv, archetypes)
   const topParties = rankParties(uv, parties)
   const topLeaders = rankLeaders(uv, leaders)
-  const ratified = state.history.filter((h) => h.ratified).length
-  const struck = state.history.length - ratified
+  const ratified = state.history.filter((h) => h.verdict === 'ratify').length
+  const struck = state.history.filter((h) => h.verdict === 'strike').length
+  const abstained = state.history.filter((h) => h.verdict === 'abstain').length
 
   const [copied, setCopied] = useState(false)
   const stds = Object.fromEntries(results.map((r) => [r.axis, r.std])) as Record<AxisId, number>
   const copyLink = () => {
-    const url = buildShareUrl(uv, stds, [ratified, struck])
+    const url = buildShareUrl(uv, stds, [ratified, struck, abstained])
     navigator.clipboard?.writeText(url).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 1600)
@@ -47,6 +48,7 @@ export function Verdict({ state, onHome, onNewRun }: { state: SessionState; onHo
       topParty: topParties[0]?.party.name,
       ratified,
       struck,
+      abstained,
     })
 
   if (showTrail) return <PaperTrail history={state.history} onBack={() => setShowTrail(false)} />
@@ -57,7 +59,9 @@ export function Verdict({ state, onHome, onNewRun }: { state: SessionState; onHo
         <div className="v-head">
           <div className="kick">Official Findings · Session XII</div>
           <h2>Your Standing</h2>
-          <div className="sub">{state.history.length} bills judged · adaptive certainty {Math.round(overall.certainty * 100)}%</div>
+          <div className="sub">
+            {state.history.length} bills judged ·{abstained > 0 && <> {abstained} abstained ·</>} adaptive certainty {Math.round(overall.certainty * 100)}%
+          </div>
         </div>
 
         <div className="v-body">
@@ -84,7 +88,7 @@ export function Verdict({ state, onHome, onNewRun }: { state: SessionState; onHo
                   {top && (
                     <span className="an-line">
                       <span className="an-key">{top.delta < 0 ? '◀ pulled left' : top.delta > 0 ? 'pulled right ▶' : 'held centre'}</span>{' '}
-                      most when you {top.h.ratified ? 'ratified' : 'struck'} “{shorten(top.h.title)}”.
+                      most when you {top.h.verdict === 'ratify' ? 'ratified' : 'struck'} “{shorten(top.h.title)}”.
                     </span>
                   )}
                   <span className="an-line">
@@ -114,7 +118,7 @@ export function Verdict({ state, onHome, onNewRun }: { state: SessionState; onHo
             <VerdictIdentity archetype={arch} />
             <EchoList title="Parties you most resemble" items={topParties.map((p) => ({ name: p.party.name, sub: p.party.country, pct: p.pct }))} />
             <EchoList title="Leaders your votes echoed" items={topLeaders.map((p) => ({ name: p.leader.name, sub: `${p.leader.country} · ${p.leader.era}`, pct: p.pct }))} />
-            <TallyStrip ratified={ratified} struck={struck} total={state.history.length} />
+            <TallyStrip ratified={ratified} struck={struck} abstained={abstained} total={state.history.length} />
             <div className="v-actions">
               <button className="v-btn" onClick={() => setShowTrail(true)}>▸ See Detailed Analysis</button>
               <button className="v-btn" onClick={copyLink}>{copied ? '✓ Link copied' : '🔗 Copy link'}</button>

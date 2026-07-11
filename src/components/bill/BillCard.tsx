@@ -7,7 +7,7 @@ import { AnalystColumns } from './AnalystColumns'
 import { SourceList } from './SourceList'
 import '../../styles/card.css'
 
-export function BillCard({ bill, billNumber, total }: { bill: Bill; billNumber: number; total: number }) {
+export function BillCard({ bill, billNumber, maxTarget }: { bill: Bill; billNumber: number; maxTarget: number }) {
   // Number sources in order of appearance (deduped by url) for footnote-style citations.
   const sources: AnalystSource[] = []
   const numByUrl = new Map<string, number>()
@@ -57,7 +57,7 @@ export function BillCard({ bill, billNumber, total }: { bill: Bill; billNumber: 
       </div>
 
       <SourceList sources={sources} />
-      <footer className="b-foot">Bill {billNumber} / {total}</footer>
+      <footer className="b-foot">Bill {billNumber} of ≤{maxTarget} · the docket closes when the floor is satisfied</footer>
     </div>
   )
 }

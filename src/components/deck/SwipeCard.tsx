@@ -1,79 +1,114 @@
 import { animate, motion, useMotionValue, useTransform, type MotionValue, type PanInfo } from 'framer-motion'
 import { useEffect, useRef } from 'react'
-import type { Bill } from '../../types'
+import type { Bill, Conviction, VoteVerdict } from '../../types'
 import { BillCard } from '../bill/BillCard'
 import { SwipeStamps } from './SwipeStamps'
 
-/** One bill in the deck. Owns its OWN drag value, so a fresh card always starts at
- *  x=0 (no accumulating drift). On commit it flies off, then unmounts — there is no
+/** Commit / firm-conviction thresholds (raw pointer px offset, px/s velocity). */
+export const COMMIT_DX = 120
+const COMMIT_VX = 700
+export const FIRM_DX = 250
+const FIRM_VX = 1400
+/** With all-zero constraints the element moves DRAG_ELASTIC × the pointer offset. */
+export const DRAG_ELASTIC = 0.65
+
+/** One bill in the deck. Owns its OWN drag values, so a fresh card always starts at
+ *  x=y=0 (no accumulating drift). On commit it flies off, then unmounts — there is no
  *  shared state to reset, so the old content never flashes back to centre. The next
- *  card promotes up from the docket and its writing inks into the blank sheet. */
+ *  card promotes up from the docket and its writing inks into the blank sheet.
+ *  Right/left = ratify/strike (distance grades the conviction); down = abstain. */
 export function SwipeCard({
   bill,
   billNumber,
-  total,
+  maxTarget,
   dragX,
+  locked,
   onCommit,
 }: {
   bill: Bill
   billNumber: number
-  total: number
+  maxTarget: number
   dragX: MotionValue<number>
-  onCommit: (dir: 1 | -1) => void
+  /** True while the reveal slip is open above the card — drag & keys are inert. */
+  locked: boolean
+  onCommit: (input: { verdict: VoteVerdict; conviction?: Conviction }) => void
 }) {
   const x = useMotionValue(0)
+  const y = useMotionValue(0)
   const rotate = useTransform(x, [-320, 320], [-9, 9])
-  const ratifyOp = useTransform(x, [30, 120], [0, 1])
-  const strikeOp = useTransform(x, [-120, -30], [1, 0])
   const committing = useRef(false)
+  const lockedAxis = useRef<'x' | 'y' | null>(null)
 
   useEffect(() => {
     dragX.set(0)
   }, [dragX])
 
-  function decide(dir: 1 | -1) {
+  function decide(verdict: 'ratify' | 'strike', conviction: Conviction) {
     if (committing.current) return
     committing.current = true
-    animate(x, dir * 1500, { duration: 0.32, ease: 'easeIn', onComplete: () => onCommit(dir) })
+    const dir = verdict === 'ratify' ? 1 : -1
+    animate(x, dir * 1500, { duration: 0.32, ease: 'easeIn', onComplete: () => onCommit({ verdict, conviction }) })
+  }
+  function abstain() {
+    if (committing.current) return
+    committing.current = true
+    animate(y, 1200, { duration: 0.32, ease: 'easeIn', onComplete: () => onCommit({ verdict: 'abstain' }) })
   }
   function handleDrag() {
     dragX.set(x.get())
   }
+  function settle() {
+    animate(x, 0, { type: 'spring', stiffness: 280, damping: 28 })
+    animate(y, 0, { type: 'spring', stiffness: 280, damping: 28 })
+    animate(dragX, 0, { type: 'spring', stiffness: 280, damping: 28 })
+  }
   function handleDragEnd(_e: unknown, info: PanInfo) {
-    const dx = info.offset.x
-    const vx = info.velocity.x
-    if (dx > 120 || vx > 700) decide(1)
-    else if (dx < -120 || vx < -700) decide(-1)
-    else {
-      animate(x, 0, { type: 'spring', stiffness: 280, damping: 28 })
-      animate(dragX, 0, { type: 'spring', stiffness: 280, damping: 28 })
+    // Offsets are raw pointer deltas, unaffected by the direction lock — decide only
+    // along the axis the card actually moved on, so an arcing thumb can't cast the
+    // other axis's verdict behind the stamp being shown.
+    const axis = lockedAxis.current
+    lockedAxis.current = null
+    if (axis === 'x') {
+      const dx = info.offset.x
+      const vx = info.velocity.x
+      const conviction: Conviction = Math.abs(dx) >= FIRM_DX || Math.abs(vx) >= FIRM_VX ? 'firm' : 'reluctant'
+      if (dx > COMMIT_DX || vx > COMMIT_VX) return decide('ratify', conviction)
+      if (dx < -COMMIT_DX || vx < -COMMIT_VX) return decide('strike', conviction)
+    } else if (axis === 'y') {
+      if (info.offset.y > COMMIT_DX || info.velocity.y > COMMIT_VX) return abstain()
     }
+    settle()
   }
 
   useEffect(() => {
+    if (locked) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') decide(1)
-      else if (e.key === 'ArrowLeft') decide(-1)
+      if (e.repeat) return
+      if (e.key === 'ArrowRight') decide('ratify', e.shiftKey ? 'reluctant' : 'firm')
+      else if (e.key === 'ArrowLeft') decide('strike', e.shiftKey ? 'reluctant' : 'firm')
+      else if (e.key === 'ArrowDown') abstain()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [locked])
 
   return (
     <motion.div
       className="cardwrap"
-      drag={committing.current ? false : 'x'}
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.65}
+      drag={!locked && !committing.current}
+      dragDirectionLock
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      dragElastic={DRAG_ELASTIC}
+      onDirectionLock={(axis) => { lockedAxis.current = axis }}
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
-      style={{ x, rotate }}
+      style={{ x, y, rotate }}
     >
       <div className="cardinner entering">
-        <BillCard bill={bill} billNumber={billNumber} total={total} />
+        <BillCard bill={bill} billNumber={billNumber} maxTarget={maxTarget} />
       </div>
-      <SwipeStamps strikeOp={strikeOp} ratifyOp={ratifyOp} />
+      <SwipeStamps x={x} y={y} />
     </motion.div>
   )
 }
