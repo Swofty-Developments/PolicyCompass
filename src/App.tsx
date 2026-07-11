@@ -45,6 +45,8 @@ export default function App() {
         onExit={() => {
           window.history.replaceState(null, '', window.location.pathname)
           setShared(null)
+          // The whole hash is gone; drop a #t= payload decoded from the same URL.
+          setSharedTerms(null)
         }}
       />
     )
@@ -70,6 +72,7 @@ export default function App() {
     content = (
       <TermsApp
         challenge={termsChallenge}
+        onChallengeDone={() => setTermsChallenge(null)}
         onExit={() => { setTermsChallenge(null); setMode('compass') }}
       />
     )

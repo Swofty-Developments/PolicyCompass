@@ -30,6 +30,14 @@ const PORTFOLIO_NAMES: Record<Portfolio, string> = {
   wilderness: 'The Wilderness',
 }
 
+/** In-fiction notice when a saved career could not be resumed (spec: a
+ *  mismatched resume is dropped with an in-fiction notice). */
+const DROPPED_NOTICE: Record<string, string> = {
+  bills: 'The clerks have re-bound the order paper. An unfinished career is filed as it stood.',
+  schema: 'The House has adopted new standing orders. An unfinished career is filed as it stood.',
+  corrupt: 'Water damage in the records office. An unfinished career could not be recovered.',
+}
+
 function officeLabel(state: TermsState): string {
   if (state.office === 'leader') return 'Leader'
   if (state.office === 'minister')
@@ -41,24 +49,29 @@ function officeLabel(state: TermsState): string {
  *  surface at a time (the deck unmounts whenever paper is on the desk). */
 export function TermsApp({
   challenge,
+  onChallengeDone,
   onExit,
 }: {
   challenge?: { seed: number; setup: TermsSetup } | null
+  onChallengeDone?: () => void
   onExit: () => void
 }) {
-  const { state, start, act, abandon } = useTermsRun()
+  const { state, saved, dropped, start, act, abandon } = useTermsRun()
   const [ledgerOpen, setLedgerOpen] = useState(false)
   const [view, setView] = useState<'run' | 'archive'>('run')
   const [filedSeed, setFiledSeed] = useState<number | null>(null)
   const startedChallenge = useRef(false)
+  const pendingChallenge = challenge && !startedChallenge.current ? challenge : null
 
-  // A shared-link challenge starts a fresh run on the shared seed/setup.
+  // A shared-link challenge starts on the shared seed/setup — but never over a
+  // live career (a run in progress, or finished but unfiled, blocks it below).
   useEffect(() => {
-    if (challenge && !startedChallenge.current) {
+    if (pendingChallenge && !saved) {
       startedChallenge.current = true
-      start(challenge.setup, challenge.seed)
+      start(pendingChallenge.setup, pendingChallenge.seed)
+      onChallengeDone?.()
     }
-  }, [challenge, start])
+  }, [pendingChallenge, saved, start, onChallengeDone])
 
   const obit = useMemo(
     () => (state && state.stage.kind === 'obituary' ? buildObituary(state, scenario, bills) : null),
@@ -67,10 +80,42 @@ export function TermsApp({
 
   if (view === 'archive') return <Archive onBack={() => setView('run')} />
 
+  // A live career blocks the challenge until the player rules on it.
+  if (pendingChallenge && saved) {
+    const takeOffice = () => {
+      startedChallenge.current = true
+      start(pendingChallenge.setup, pendingChallenge.seed)
+      onChallengeDone?.()
+    }
+    const decline = () => {
+      startedChallenge.current = true
+      onChallengeDone?.()
+    }
+    return (
+      <div className="desk t-stagewrap">
+        <div className="sheet t-missing">
+          <div className="kicker">A Seat Is Offered</div>
+          <p>
+            A career already lies open on this desk. Taking office on the shared seed
+            strikes the unfinished record from the book — nothing is filed.
+          </p>
+          <div className="t-obit-actions">
+            <button className="t-btn" onClick={decline}>Return to the desk</button>
+            <button className="t-btn solid" onClick={takeOffice}>Take office — strike the record</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // The challenge effect is about to start the run; don't flash the old stage.
+  if (pendingChallenge) return <div className="desk" />
+
   if (!state || state.stage.kind === 'prologue') {
     return (
       <Prologue
         scenario={scenario}
+        notice={dropped ? DROPPED_NOTICE[dropped] : undefined}
         onStart={(setup) => start(setup)}
         onExit={onExit}
         onArchive={() => setView('archive')}

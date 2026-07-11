@@ -8,11 +8,14 @@ import { DialogueScene } from '../dialogue/DialogueScene'
  *  Margaret frames the ground. The scene's two choices become the setup. */
 export function Prologue({
   scenario,
+  notice,
   onStart,
   onExit,
   onArchive,
 }: {
   scenario: Scenario
+  /** One-time in-fiction line when a saved career was dropped on boot */
+  notice?: string
   onStart: (setup: TermsSetup) => void
   onExit: () => void
   onArchive: () => void
@@ -47,6 +50,7 @@ export function Prologue({
         {archived > 0 && (
           <button className="t-dlg-cornerbtn" onClick={onArchive}>The Archive ({archived})</button>
         )}
+        {notice && <div className="t-dlg-notice hand">{notice}</div>}
       </div>
     </>
   )

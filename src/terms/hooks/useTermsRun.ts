@@ -5,9 +5,10 @@ import { scenario } from '../data/scenario'
 import {
   TERMS_SCHEMA_VERSION,
   clearSavedRun,
-  loadSavedRun,
+  loadSavedRunResult,
   newTermsRunId,
   saveSavedRun,
+  type DroppedReason,
 } from '../lib/storage'
 import { BILLS_VERSION } from '../../data/version'
 import type { SavedTermsRun, TermsAction, TermsSetup, TermsState } from '../types'
@@ -15,17 +16,19 @@ import type { SavedTermsRun, TermsAction, TermsSetup, TermsState } from '../type
 interface Slot {
   state: TermsState | null
   saved: SavedTermsRun | null
+  dropped: DroppedReason | null
 }
 
 /** Replays the persisted action log through the pure reducer; a run that no
- *  longer replays (data drift) is treated as absent. */
+ *  longer replays (data drift) is dropped and reported once. */
 function boot(): Slot {
-  const saved = loadSavedRun()
-  if (!saved) return { state: null, saved: null }
+  const { run, dropped } = loadSavedRunResult()
+  if (!run) return { state: null, saved: null, dropped }
   try {
-    return { state: replayRun(scenario, bills, saved), saved }
+    return { state: replayRun(scenario, bills, run), saved: run, dropped: null }
   } catch {
-    return { state: null, saved: null }
+    clearSavedRun()
+    return { state: null, saved: null, dropped: 'corrupt' }
   }
 }
 
@@ -33,6 +36,8 @@ function boot(): Slot {
 export function useTermsRun(): {
   state: TermsState | null
   saved: SavedTermsRun | null
+  /** Set when boot dropped an unreadable/mismatched save (reported once). */
+  dropped: DroppedReason | null
   start(setup: TermsSetup, seed?: number): void
   act(action: TermsAction): void
   abandon(): void
@@ -55,7 +60,7 @@ export function useTermsRun(): {
       finished: false,
     }
     saveSavedRun(saved)
-    setSlot({ state: newRun(scenario, bills, s, setup), saved })
+    setSlot({ state: newRun(scenario, bills, s, setup), saved, dropped: null })
   }, [])
 
   const act = useCallback(
@@ -70,15 +75,15 @@ export function useTermsRun(): {
         finished: next.ended !== null,
       }
       saveSavedRun(nextSaved)
-      setSlot({ state: next, saved: nextSaved })
+      setSlot({ state: next, saved: nextSaved, dropped: null })
     },
     [slot],
   )
 
   const abandon = useCallback(() => {
     clearSavedRun()
-    setSlot({ state: null, saved: null })
+    setSlot({ state: null, saved: null, dropped: null })
   }, [])
 
-  return { state: slot.state, saved: slot.saved, start, act, abandon }
+  return { state: slot.state, saved: slot.saved, dropped: slot.dropped, start, act, abandon }
 }

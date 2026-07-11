@@ -120,3 +120,14 @@
   .t-dlg-line { font-size: clamp(14px, 4vw, 16px); }
   .t-dlg-direction { font-size: clamp(17px, 5vw, 21px); }
 }
+
+/* One-time dropped-career notice under the corner controls */
+.t-dlg-notice {
+  max-width: 34ch;
+  margin-top: 0.5vh;
+  font-family: var(--hand);
+  font-size: clamp(0.85rem, 1.6vh, 1.05rem);
+  color: var(--sepia);
+  opacity: 0.9;
+  transform: rotate(-1.2deg);
+}
