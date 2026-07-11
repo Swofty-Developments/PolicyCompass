@@ -1,15 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Bill } from '../types'
-import { applyVote, createSession, rebuildSession, type SessionState } from '../engine/session'
-import { newRunId, saveRun, type SavedRun } from '../lib/storage'
+import {
+  applyVote,
+  createSession,
+  rebuildSession,
+  DEFAULT_CONFIG,
+  type SessionState,
+  type VoteInput,
+} from '../engine/session'
+import { newRunId, saveRun, type SavedRun, type SavedVote } from '../lib/storage'
 
-const votesOf = (state: SessionState) => state.history.map((h) => ({ billId: h.billId, ratified: h.ratified }))
+const votesOf = (state: SessionState): SavedVote[] =>
+  state.history.map((h) => ({ billId: h.billId, verdict: h.verdict, conviction: h.conviction }))
 const signature = (state: SessionState) => JSON.stringify({ v: votesOf(state), f: state.finished })
 
 /** A session bound to a persisted run. Every real vote is written to localStorage. */
-export function useRun(bills: Bill[], target: number) {
+export function useRun(bills: Bill[], config = DEFAULT_CONFIG) {
   const [runId, setRunId] = useState<string | null>(null)
-  const [state, setState] = useState<SessionState>(() => createSession(bills, target))
+  const [state, setState] = useState<SessionState>(() => createSession(bills, config))
   // Signature last written, so loading a run never rewrites it (which would un-seal a
   // finished run replayed against a changed deck, or bump updatedAt with no change).
   const lastSaved = useRef<string>('')
@@ -20,29 +28,29 @@ export function useRun(bills: Bill[], target: number) {
     const sig = signature(state)
     if (sig === lastSaved.current) return
     lastSaved.current = sig
-    saveRun({ id: runId, target: state.target, votes: votesOf(state), finished: state.finished })
+    saveRun({ id: runId, target: state.config.max, votes: votesOf(state), finished: state.finished })
   }, [runId, state])
 
   const startNew = useCallback(() => {
     lastSaved.current = ''
     setRunId(newRunId())
-    setState(createSession(bills, target))
-  }, [bills, target])
+    setState(createSession(bills, config))
+  }, [bills, config])
 
   const resume = useCallback(
     (saved: SavedRun): SessionState => {
-      const next = rebuildSession(bills, saved.target ?? target, saved.votes)
+      const next = rebuildSession(bills, saved.votes, config)
       lastSaved.current = signature(next)
       setRunId(saved.id)
       setState(next)
       return next
     },
-    [bills, target],
+    [bills, config],
   )
 
   const clear = useCallback(() => setRunId(null), [])
 
-  const vote = useCallback((ratified: boolean) => setState((s) => applyVote(s, bills, ratified)), [bills])
+  const vote = useCallback((input: VoteInput) => setState((s) => applyVote(s, bills, input)), [bills])
 
   return { runId, state, startNew, resume, vote, clear }
 }
