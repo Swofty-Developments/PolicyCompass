@@ -16,6 +16,7 @@ import {
   WhipNoteCard,
 } from './artifacts'
 import { BillStage } from './shell/BillStage'
+import { DeskLayout, standingDisclosed } from './shell/DeskLayout'
 import { marginaliaFor } from './shell/marginalia'
 import { Prologue } from './setup/Prologue'
 import { ElectionNight } from './election/ElectionNight'
@@ -137,130 +138,8 @@ export function TermsApp({
   const partyShort = scenario.blocs.find((b) => b.id === state.partyId)?.short ?? 'the party'
   const advance = () => act({ type: 'advance' })
 
+  // Full-bleed moments render without rails.
   switch (stage.kind) {
-    case 'whipnote':
-      return (
-        <div className="desk t-stagewrap">
-          <WhipNoteCard
-            whip={stage.whip}
-            billTitle={billTitle(stage.billId)}
-            partyShort={partyShort}
-            marginNote={marginaliaFor(state, 'whipnote')}
-            onDismiss={advance}
-          />
-        </div>
-      )
-
-    case 'negotiation': {
-      const bloc = scenario.blocs.find((b) => b.id === stage.offer.blocId) ?? scenario.blocs[0]
-      return (
-        <div className="desk t-stagewrap">
-          <TermsSheet
-            offer={stage.offer}
-            bloc={bloc}
-            billTitle={billTitle(stage.billId)}
-            onDecide={(accept) => act({ type: 'negotiate', accept })}
-          />
-        </div>
-      )
-    }
-
-    case 'bill': {
-      const bill = bills.find((b) => b.id === stage.billId)
-      const divisionSlots = actDef ? actDef.slots.filter((s) => s.kind !== 'event') : []
-      const divisionNo = actDef
-        ? actDef.slots.slice(0, state.slotIndex + 1).filter((s) => s.kind !== 'event').length
-        : 1
-      if (!bill) {
-        // Docket drift guard: the division must still be decidable.
-        return (
-          <div className="desk t-stagewrap">
-            <div className="sheet t-missing">
-              <div className="kicker">Order Paper · Clerk's Correction</div>
-              <p>The clerk cannot produce the text of this bill. The chair calls the division regardless.</p>
-              <div className="t-obit-actions">
-                <button className="t-btn" onClick={() => act({ type: 'vote', choice: 'strike' })}>Strike down</button>
-                <button className="t-btn solid" onClick={() => act({ type: 'vote', choice: 'ratify' })}>Ratify</button>
-              </div>
-            </div>
-          </div>
-        )
-      }
-      return (
-        <BillStage
-          bill={bill}
-          divisionNo={divisionNo}
-          divisionsTotal={divisionSlots.length}
-          actTitle={actDef?.title ?? state.actId}
-          officeLabel={officeLabel(state)}
-          knifeEdge={stage.projection.knifeEdge}
-          onOpenLedger={() => setLedgerOpen(true)}
-          onExit={onExit}
-          onAbandon={abandon}
-          onVote={(choice) => act({ type: 'vote', choice })}
-        />
-      )
-    }
-
-    case 'result':
-      if (stage.result.tier === 'ribbon') {
-        return (
-          <div className="desk t-stagewrap">
-            <ResultRibbon result={stage.result} onDismiss={advance} />
-          </div>
-        )
-      }
-      return (
-        <div className="desk t-stagewrap">
-          <ResultSlip
-            result={stage.result}
-            blocs={scenario.blocs}
-            marginNote={marginaliaFor(state, 'slip')}
-            onDismiss={advance}
-          />
-        </div>
-      )
-
-    case 'event': {
-      const event = scenario.events.find((e) => e.id === stage.eventId)
-      if (!event) {
-        return (
-          <div className="desk t-stagewrap">
-            <div className="sheet t-missing">
-              <div className="kicker">Dead Letter Office</div>
-              <p>A dispatch went astray in the night. The House moves on.</p>
-              <div className="t-obit-actions">
-                <button className="t-btn solid" onClick={advance}>Continue</button>
-              </div>
-            </div>
-          </div>
-        )
-      }
-      return (
-        <div className="desk t-stagewrap">
-          <EventArtifact
-            event={{ ...event, body: renderEventBody(state, event) }}
-            onChoose={(optionId) => act({ type: 'event_option', optionId })}
-          />
-        </div>
-      )
-    }
-
-    case 'event_outcome': {
-      const event = scenario.events.find((e) => e.id === stage.eventId)
-      return (
-        <div className="desk t-stagewrap">
-          <EventOutcome
-            title={event?.title ?? 'The Outcome'}
-            text={stage.text}
-            deltas={stage.deltas}
-            succeeded={stage.succeeded}
-            onDismiss={advance}
-          />
-        </div>
-      )
-    }
-
     case 'election':
       return (
         <ElectionNight
@@ -301,8 +180,144 @@ export function TermsApp({
           onClose={abandon}
         />
       )
-
-    default:
-      return <div className="desk" />
   }
+
+  // Run stages share one desk: the rails flank the centre surface (≥1200px),
+  // mounted once around the switch so they persist across stage changes.
+  const surface = (() => {
+    switch (stage.kind) {
+      case 'whipnote':
+        return (
+          <div className="t-stage t-stagewrap">
+            <WhipNoteCard
+              whip={stage.whip}
+              billTitle={billTitle(stage.billId)}
+              partyShort={partyShort}
+              marginNote={marginaliaFor(state, 'whipnote')}
+              onDismiss={advance}
+            />
+          </div>
+        )
+
+      case 'negotiation': {
+        const bloc = scenario.blocs.find((b) => b.id === stage.offer.blocId) ?? scenario.blocs[0]
+        return (
+          <div className="t-stage t-stagewrap">
+            <TermsSheet
+              offer={stage.offer}
+              bloc={bloc}
+              billTitle={billTitle(stage.billId)}
+              onDecide={(accept) => act({ type: 'negotiate', accept })}
+            />
+          </div>
+        )
+      }
+
+      case 'bill': {
+        const bill = bills.find((b) => b.id === stage.billId)
+        const divisionSlots = actDef ? actDef.slots.filter((s) => s.kind !== 'event') : []
+        const divisionNo = actDef
+          ? actDef.slots.slice(0, state.slotIndex + 1).filter((s) => s.kind !== 'event').length
+          : 1
+        if (!bill) {
+          // Docket drift guard: the division must still be decidable.
+          return (
+            <div className="t-stage t-stagewrap">
+              <div className="sheet t-missing">
+                <div className="kicker">Order Paper · Clerk's Correction</div>
+                <p>The clerk cannot produce the text of this bill. The chair calls the division regardless.</p>
+                <div className="t-obit-actions">
+                  <button className="t-btn" onClick={() => act({ type: 'vote', choice: 'strike' })}>Strike down</button>
+                  <button className="t-btn solid" onClick={() => act({ type: 'vote', choice: 'ratify' })}>Ratify</button>
+                </div>
+              </div>
+            </div>
+          )
+        }
+        return (
+          <BillStage
+            bill={bill}
+            divisionNo={divisionNo}
+            divisionsTotal={divisionSlots.length}
+            actTitle={actDef?.title ?? state.actId}
+            officeLabel={officeLabel(state)}
+            knifeEdge={stage.projection.knifeEdge}
+            ledgerUnlocked={standingDisclosed(state)}
+            onOpenLedger={() => setLedgerOpen(true)}
+            onExit={onExit}
+            onAbandon={abandon}
+            onVote={(choice) => act({ type: 'vote', choice })}
+          />
+        )
+      }
+
+      case 'result':
+        if (stage.result.tier === 'ribbon') {
+          return (
+            <div className="t-stage t-stagewrap">
+              <ResultRibbon result={stage.result} onDismiss={advance} />
+            </div>
+          )
+        }
+        return (
+          <div className="t-stage t-stagewrap">
+            <ResultSlip
+              result={stage.result}
+              blocs={scenario.blocs}
+              marginNote={marginaliaFor(state, 'slip')}
+              onDismiss={advance}
+            />
+          </div>
+        )
+
+      case 'event': {
+        const event = scenario.events.find((e) => e.id === stage.eventId)
+        if (!event) {
+          return (
+            <div className="t-stage t-stagewrap">
+              <div className="sheet t-missing">
+                <div className="kicker">Dead Letter Office</div>
+                <p>A dispatch went astray in the night. The House moves on.</p>
+                <div className="t-obit-actions">
+                  <button className="t-btn solid" onClick={advance}>Continue</button>
+                </div>
+              </div>
+            </div>
+          )
+        }
+        return (
+          <div className="t-stage t-stagewrap">
+            <EventArtifact
+              event={{ ...event, body: renderEventBody(state, event) }}
+              onChoose={(optionId) => act({ type: 'event_option', optionId })}
+            />
+          </div>
+        )
+      }
+
+      case 'event_outcome': {
+        const event = scenario.events.find((e) => e.id === stage.eventId)
+        return (
+          <div className="t-stage t-stagewrap">
+            <EventOutcome
+              title={event?.title ?? 'The Outcome'}
+              text={stage.text}
+              deltas={stage.deltas}
+              succeeded={stage.succeeded}
+              onDismiss={advance}
+            />
+          </div>
+        )
+      }
+
+      default:
+        return null
+    }
+  })()
+
+  return (
+    <DeskLayout state={state} scenario={scenario} onOpenLedger={() => setLedgerOpen(true)}>
+      {surface}
+    </DeskLayout>
+  )
 }

@@ -36,6 +36,32 @@ function treasuryNote(treasury: number): string {
   return 'the markets wire the Chancellor at fifteen.'
 }
 
+export interface MemoLine {
+  k: string
+  n: number
+  note: string
+  alert: boolean
+}
+
+/** The pollster's figures beside their threshold lines — one source for the
+ *  ledger memo section and the standing rail. */
+export function memoLines(state: TermsState): MemoLine[] {
+  const rows: MemoLine[] = [
+    { k: 'Confidence', n: state.trust, note: trustNote(state.trust, Boolean(state.flags['ultimatum'])), alert: state.trust < 20 },
+    { k: 'Conviction', n: state.conviction, note: convictionNote(state.conviction), alert: state.conviction < 40 },
+    { k: 'Exchequer', n: state.treasury, note: treasuryNote(state.treasury), alert: state.treasury < 15 },
+  ]
+  if (state.whipDefiances > 0) {
+    rows.push({
+      k: 'Defiances',
+      n: state.whipDefiances,
+      note: 'three strikes in a term convene an expulsion vote.',
+      alert: state.whipDefiances >= 2,
+    })
+  }
+  return rows
+}
+
 function MemoRow({ k, n, note, alert }: { k: string; n: number; note: string; alert: boolean }) {
   return (
     <div className={'t-memo-row' + (alert ? ' alert' : '')}>
@@ -63,17 +89,9 @@ export function Ledger({ state, scenario, onClose }: { state: TermsState; scenar
 
         <div className="t-ledger-scroll">
           <div className="t-ledger-sec">The Pollster’s Memo</div>
-          <MemoRow k="Confidence" n={state.trust} note={trustNote(state.trust, Boolean(state.flags['ultimatum']))} alert={state.trust < 20} />
-          <MemoRow k="Conviction" n={state.conviction} note={convictionNote(state.conviction)} alert={state.conviction < 40} />
-          <MemoRow k="Exchequer" n={state.treasury} note={treasuryNote(state.treasury)} alert={state.treasury < 15} />
-          {state.whipDefiances > 0 && (
-            <MemoRow
-              k="Defiances"
-              n={state.whipDefiances}
-              note="three strikes in a term convene an expulsion vote."
-              alert={state.whipDefiances >= 2}
-            />
-          )}
+          {memoLines(state).map((l) => (
+            <MemoRow k={l.k} n={l.n} note={l.note} alert={l.alert} key={l.k} />
+          ))}
 
           <div className="t-ledger-sec">The National Mood</div>
           {AXES.map((a) => {

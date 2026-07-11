@@ -1,12 +1,14 @@
 import { useState, type ReactNode } from 'react'
 
 /** The docket frame: a ≤36px strip over the chamber floor. Tap-only — the strip
- *  never drags (it would fight the swipe gutters). */
+ *  never drags (it would fight the swipe gutters). The ledger affordance stays
+ *  hidden until the pollster's memo unlocks it. */
 export function DocketFrame({
   actTitle,
   positionLabel,
   officeLabel,
   knifeEdge,
+  ledgerUnlocked,
   onOpenLedger,
   onExit,
   onAbandon,
@@ -16,6 +18,7 @@ export function DocketFrame({
   positionLabel: string
   officeLabel: string
   knifeEdge: boolean
+  ledgerUnlocked: boolean
   onOpenLedger: () => void
   onExit: () => void
   onAbandon: () => void
@@ -24,7 +27,7 @@ export function DocketFrame({
   const [confirming, setConfirming] = useState(false)
 
   return (
-    <div className="desk t-run">
+    <div className="t-run">
       <div className="t-strip">
         <div className="t-strip-left">
           <span className="t-strip-act">{actTitle}</span>
@@ -32,7 +35,7 @@ export function DocketFrame({
           <span className="t-strip-office">{officeLabel}</span>
         </div>
         <div className="t-strip-actions">
-          <button className="t-strip-btn" onClick={onOpenLedger}>Ledger</button>
+          {ledgerUnlocked && <button className="t-strip-btn" onClick={onOpenLedger}>Ledger</button>}
           <button className="t-strip-btn" onClick={onExit}>Desk</button>
           <button
             className={'t-strip-btn quiet' + (confirming ? ' arm' : '')}

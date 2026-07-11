@@ -18,7 +18,7 @@
 .t-arthead {
   flex: none;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: clamp(10px, 0.64vw + 5.1px, 0.8rem);
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: #b08e54;
@@ -31,7 +31,7 @@
   display: flex;
   min-height: 0;
   max-height: 100%;
-  width: min(700px, 96%);
+  width: min(860px, 92%);
   perspective: 1700px;
   animation: t-settle 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
@@ -46,14 +46,14 @@
 .t-flip-inner.is-flipped .t-face-front { pointer-events: none; }
 .t-flip-inner.is-flipped .t-face-back { pointer-events: auto; }
 
-.t-flip--frontpage { width: min(900px, 96%); }
-.t-flip--letter { width: min(640px, 94%); }
-.t-flip--memo, .t-flip--ultimatum { width: min(700px, 94%); }
-.t-flip--mandate { width: min(540px, 92%); }
-.t-flip--whipnote { width: min(500px, 92%); }
-.t-flip--sheet { width: min(720px, 94%); }
-.t-flip--slip { width: min(900px, 96%); }
-.t-flip--outcome { width: min(640px, 94%); }
+.t-flip--frontpage { width: min(1040px, 96%); }
+.t-flip--letter { width: min(780px, 88%); }
+.t-flip--memo, .t-flip--ultimatum { width: min(840px, 92%); }
+.t-flip--mandate { width: min(620px, 80%); }
+.t-flip--whipnote { width: min(660px, 84%); }
+.t-flip--sheet { width: min(860px, 92%); }
+.t-flip--slip { width: min(1080px, 96%); }
+.t-flip--outcome { width: min(800px, 90%); }
 
 /* ---- paper base ---- */
 .t-paper {
@@ -88,14 +88,14 @@
 .t-paper-scroll::-webkit-scrollbar { width: 5px; }
 .t-paper-scroll::-webkit-scrollbar-thumb { background: rgba(122, 92, 46, 0.5); border-radius: 3px; }
 
-.t-kick { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); }
-.t-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(24px, 3.1vw, 40px); line-height: 1.02; margin: 0.6vh 0 0.8vh; }
-.t-body { font-family: var(--serif-body); font-weight: 500; font-size: clamp(14px, 1.45vw, 18px); line-height: 1.52; color: var(--ink-soft); white-space: pre-wrap; margin: 0; }
-.t-stamp { position: absolute; top: 12px; right: 14px; transform: rotate(8deg); font-size: 11px; padding: 4px 9px; border-width: 2.5px; z-index: 2; background: transparent; }
+.t-kick { font-family: var(--mono); font-size: clamp(10px, 1.18vw + 1px, 0.95rem); letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); }
+.t-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3.2vw + 1.8px, 2.5rem); line-height: 1.02; margin: 0.6vh 0 0.8vh; }
+.t-body { font-family: var(--serif-body); font-weight: 500; font-size: clamp(15px, 1.7vw + 2.2px, 1.4rem); line-height: 1.55; color: var(--ink-soft); white-space: pre-wrap; margin: 0; max-width: 72ch; }
+.t-stamp { position: absolute; top: 12px; right: 14px; transform: rotate(8deg); font-size: clamp(11px, 0.6vw + 6.5px, 0.85rem); padding: 4px 10px; border-width: 2.5px; z-index: 2; background: transparent; }
 .t-stamp-green { color: var(--green); border-color: var(--green); }
 .t-margin-note {
   font-family: var(--hand);
-  font-size: clamp(17px, 1.9vw, 22px);
+  font-size: clamp(17px, 1.4vw + 6.7px, 1.45rem);
   line-height: 1.25;
   color: var(--red-bright);
   transform: rotate(-1.6deg);
@@ -117,16 +117,16 @@
 }
 .t-option:hover { background: linear-gradient(#f9f1d8, #f0e3bd); border-color: var(--red); transform: translateY(-1px); }
 .t-option:active { transform: translateY(0); }
-.t-option-tag { display: block; font-family: var(--mono); font-weight: 700; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia); margin-bottom: 2px; }
-.t-option-label { font-family: var(--serif-body); font-weight: 600; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.3; }
-.t-option-detail { display: block; font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.15vw, 14px); color: var(--sepia-deep); margin-top: 2px; }
+.t-option-tag { display: block; font-family: var(--mono); font-weight: 700; font-size: clamp(9px, 0.6vw + 4.4px, 0.72rem); letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia); margin-bottom: 2px; }
+.t-option-label { font-family: var(--serif-body); font-weight: 600; font-size: clamp(15px, 1.15vw + 6.3px, 1.25rem); line-height: 1.32; }
+.t-option-detail { display: block; font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 0.7vw + 7.8px, 1rem); color: var(--sepia-deep); margin-top: 2px; }
 
 /* ---- precedents: foot list (desktop) + verso (mobile) ---- */
 .t-precfoot { flex: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 14px; margin-top: 1vh; padding-top: 0.8vh; border-top: 1px dashed var(--rule); }
-.t-precfoot-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
-.t-precitem { display: inline-flex; align-items: baseline; gap: 5px; font-family: var(--serif-body); font-size: 12px; }
-.t-precnum { font-family: var(--mono); font-weight: 700; font-size: 10px; color: var(--sepia); background: rgba(122, 92, 46, 0.16); border-radius: 3px; padding: 0 5px; }
-.t-precfoot .src, .t-verso-list .src { font-size: 12px; }
+.t-precfoot-label { font-family: var(--mono); font-size: clamp(9px, 0.8vw + 2.9px, 0.78rem); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.t-precitem { display: inline-flex; align-items: baseline; gap: 5px; font-family: var(--serif-body); font-size: clamp(12px, 0.73vw + 6.5px, 0.95rem); }
+.t-precnum { font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 0.45vw + 6.5px, 0.75rem); color: var(--sepia); background: rgba(122, 92, 46, 0.16); border-radius: 3px; padding: 0 5px; }
+.t-precfoot .src, .t-verso-list .src { font-size: clamp(12px, 0.73vw + 6.5px, 0.95rem); }
 
 .t-fold {
   position: absolute;
@@ -200,22 +200,22 @@
   background-position: left top;
 }
 .t-tg-route { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 1.2vh; padding-right: 92px; }
-.t-tg-route .t-tg-co { font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.3vw, 15px); letter-spacing: 0.22em; text-transform: uppercase; }
-.t-tg-route .t-tg-mark { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); text-align: right; }
-.t-paper--telegram .t-title { font-family: var(--mono); font-size: clamp(17px, 2vw, 24px); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
-.t-paper--telegram .t-body { font-family: var(--mono); font-size: clamp(13px, 1.35vw, 16px); line-height: 1.62; letter-spacing: 0.04em; text-transform: uppercase; }
-.t-tg-sender { font-family: var(--mono); font-size: clamp(12px, 1.25vw, 14px); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2vh; text-align: right; }
+.t-tg-route .t-tg-co { font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.1vw + 3.7px, 1.05rem); letter-spacing: 0.22em; text-transform: uppercase; }
+.t-tg-route .t-tg-mark { font-family: var(--mono); font-size: clamp(9px, 0.57vw + 4.7px, 0.72rem); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); text-align: right; }
+.t-paper--telegram .t-title { font-family: var(--mono); font-size: clamp(17px, 2.3vw - 0.5px, 1.7rem); letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; }
+.t-paper--telegram .t-body { font-family: var(--mono); font-size: clamp(13.5px, 1.3vw + 3.6px, 1.2rem); line-height: 1.62; letter-spacing: 0.04em; text-transform: uppercase; max-width: 68ch; }
+.t-tg-sender { font-family: var(--mono); font-size: clamp(12px, 0.9vw + 5.1px, 1rem); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2vh; text-align: right; }
 .t-paper--telegram .t-options { border-top: 2px solid var(--ink); }
 .t-paper--telegram .t-option { border-style: solid; border-color: var(--ink); border-radius: 0; background: linear-gradient(#f3e9c6, #ecdfb4); }
 .t-paper--telegram .t-option:hover { border-color: var(--red); }
-.t-paper--telegram .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 1.3vw, 15px); text-transform: uppercase; letter-spacing: 0.04em; }
+.t-paper--telegram .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 0.86vw + 6.4px, 1.05rem); text-transform: uppercase; letter-spacing: 0.04em; }
 
 /* ---- front page: newsprint, masthead, column rules ---- */
 .t-paper--frontpage { background: linear-gradient(180deg, #eee8d4, #e2d9ba); border-radius: 4px; }
 .t-fp-masthead {
   font-family: var(--serif-display);
   font-weight: 700;
-  font-size: clamp(26px, 3.4vw, 44px);
+  font-size: clamp(26px, 5vw - 12px, 3rem);
   letter-spacing: 0.08em;
   font-variant: small-caps;
   text-align: center;
@@ -228,7 +228,7 @@
   justify-content: space-between;
   gap: 10px;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: clamp(9px, 0.7vw + 3.7px, 0.75rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sepia-deep);
@@ -236,8 +236,8 @@
   padding: 4px 2px;
   margin-bottom: 1.2vh;
 }
-.t-paper--frontpage .t-title { text-align: center; font-size: clamp(30px, 4.4vw, 54px); line-height: 0.98; text-transform: uppercase; letter-spacing: 0.01em; margin: 0.6vh 0 1.2vh; }
-.t-fp-body { column-count: 2; column-gap: 2.2vw; column-rule: 1px solid rgba(43, 33, 20, 0.3); text-align: justify; hyphens: auto; }
+.t-paper--frontpage .t-title { text-align: center; font-size: clamp(30px, 5.5vw - 11.4px, 3.4rem); line-height: 0.98; text-transform: uppercase; letter-spacing: 0.01em; margin: 0.6vh 0 1.2vh; }
+.t-fp-body { column-count: 2; column-gap: clamp(2rem, 2.4vw, 2.8rem); column-rule: 1px solid rgba(43, 33, 20, 0.3); text-align: justify; hyphens: auto; max-width: none; }
 .t-fp-body::first-letter { font-family: var(--serif-display); font-weight: 700; font-size: 3em; float: left; line-height: 0.82; padding: 3px 7px 0 0; }
 .t-paper--frontpage .t-option-tag { color: var(--red); }
 
@@ -245,11 +245,11 @@
 .t-paper--whipnote { background: linear-gradient(160deg, #f5edd3, #e9dab2); transform: rotate(-0.6deg); padding: clamp(16px, 2.4vh, 26px) clamp(18px, 2.2vw, 30px); }
 .t-paper--whipnote::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 12px; background: linear-gradient(rgba(60, 45, 20, 0.12), transparent); pointer-events: none; }
 .t-whip-head { border-bottom: 2px solid var(--red); padding-bottom: 6px; margin-bottom: 1vh; }
-.t-whip-office { display: block; font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
-.t-whip-party { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); margin-top: 2px; }
-.t-whip-re { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.3vw, 15px); color: var(--sepia-deep); margin-bottom: 0.8vh; }
-.t-whip-note { font-family: var(--hand); font-size: clamp(20px, 2.6vh, 27px); line-height: 1.3; color: #46351c; transform: rotate(-0.5deg); }
-.t-whip-directive { font-family: var(--serif-body); font-weight: 600; font-size: clamp(15px, 1.6vw, 19px); margin-top: 1.4vh; }
+.t-whip-office { display: block; font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.15vw + 2.4px, 1rem); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.t-whip-party { display: block; font-family: var(--mono); font-size: clamp(9px, 0.7vw + 3.7px, 0.75rem); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); margin-top: 2px; }
+.t-whip-re { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.05vw + 5.1px, 1.1rem); color: var(--sepia-deep); margin-bottom: 0.8vh; }
+.t-whip-note { font-family: var(--hand); font-size: clamp(20px, 1.65vw + 7.6px, 1.7rem); line-height: 1.32; color: #46351c; transform: rotate(-0.5deg); }
+.t-whip-directive { font-family: var(--serif-body); font-weight: 600; font-size: clamp(15px, 1.5vw + 3.6px, 1.35rem); margin-top: 1.4vh; }
 .t-whip-directive b {
   font-family: var(--mono);
   font-weight: 700;
@@ -261,39 +261,39 @@
 }
 .t-whip-ack { align-self: flex-end; margin-top: 2vh; }
 .t-paper--whipnote .t-title, .t-paper--whipnote .t-body { font-family: var(--hand); font-weight: 600; color: #46351c; }
-.t-paper--whipnote .t-title { font-size: clamp(22px, 3vh, 28px); }
-.t-paper--whipnote .t-body { font-size: clamp(19px, 2.6vh, 25px); line-height: 1.35; }
+.t-paper--whipnote .t-title { font-size: clamp(22px, 1.55vw + 10.3px, 1.8rem); }
+.t-paper--whipnote .t-body { font-size: clamp(19px, 1.5vw + 7.6px, 1.6rem); line-height: 1.35; }
 
 /* ---- letter: cream stock, the hand, no chrome ---- */
 .t-paper--letter { background: radial-gradient(130% 120% at 20% 0%, #f8f0d9, #eddfba); padding: clamp(26px, 5vh, 52px) clamp(26px, 5vw, 60px); }
-.t-paper--letter .t-title { font-family: var(--hand); font-weight: 600; font-size: clamp(24px, 3.4vh, 32px); color: #3a2c16; transform: rotate(-0.4deg); }
-.t-paper--letter .t-body { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 2.6vh, 25px); line-height: 1.42; color: #46351c; }
-.t-letter-sig { font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 3vh, 30px); color: #3a2c16; text-align: right; transform: rotate(-1.4deg); margin-top: 1.6vh; }
+.t-paper--letter .t-title { font-family: var(--hand); font-weight: 600; font-size: clamp(24px, 1.8vw + 10.2px, 2rem); color: #3a2c16; transform: rotate(-0.4deg); }
+.t-paper--letter .t-body { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 1.4vw + 8.6px, 1.56rem); line-height: 1.42; color: #46351c; max-width: 62ch; }
+.t-letter-sig { font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 1.6vw + 9.9px, 1.8rem); color: #3a2c16; text-align: right; transform: rotate(-1.4deg); margin-top: 1.6vh; }
 .t-paper--letter .t-options { border-top: none; }
 .t-paper--letter .t-option { background: transparent; border: none; border-bottom: 1px dashed var(--sepia); border-radius: 0; }
-.t-paper--letter .t-option-label { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 2.4vh, 24px); color: #5e3d17; }
+.t-paper--letter .t-option-label { font-family: var(--hand); font-weight: 600; font-size: clamp(19px, 1.15vw + 10.4px, 1.5rem); color: #5e3d17; }
 .t-paper--letter .t-option:hover { background: rgba(232, 176, 74, 0.14); }
 
 /* ---- memo & ultimatum: the typed office ---- */
 .t-paper--memo, .t-paper--ultimatum { background: linear-gradient(180deg, #f2ead0, #e7dab5); border-radius: 3px; }
 .t-paper--ultimatum { border: 3px double #1c1710; box-shadow: 0 26px 60px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(28, 23, 16, 0.35), inset 0 0 70px rgba(120, 90, 40, 0.12); }
-.t-memo-title { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 1.6vw, 18px); letter-spacing: 0.34em; text-transform: uppercase; text-align: center; margin-bottom: 1.2vh; }
+.t-memo-title { font-family: var(--mono); font-weight: 700; font-size: clamp(14px, 2.3vw - 3.3px, 1.5rem); letter-spacing: 0.34em; text-transform: uppercase; text-align: center; margin-bottom: 1.2vh; }
 .t-paper--ultimatum .t-memo-title { color: #1c1710; }
 .t-memo-fields { border-top: 2px solid var(--ink); margin-bottom: 1.2vh; }
 .t-memo-field { display: flex; gap: 10px; align-items: baseline; border-bottom: 1px solid rgba(43, 33, 20, 0.4); padding: 5px 2px; }
-.t-memo-field .k { flex: none; width: 4.5em; font-family: var(--mono); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); }
-.t-memo-field .v { font-family: var(--mono); font-size: clamp(12px, 1.3vw, 15px); }
-.t-paper--memo .t-body, .t-paper--ultimatum .t-body { font-family: var(--mono); font-size: clamp(13px, 1.35vw, 15px); line-height: 1.6; }
-.t-paper--memo .t-option-label, .t-paper--ultimatum .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 1.3vw, 15px); }
+.t-memo-field .k { flex: none; width: 4.5em; font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 0.64vw + 5.1px, 0.8rem); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia-deep); }
+.t-memo-field .v { font-family: var(--mono); font-size: clamp(12px, 1.1vw + 3.7px, 1.05rem); }
+.t-paper--memo .t-body, .t-paper--ultimatum .t-body { font-family: var(--mono); font-size: clamp(13.5px, 1.3vw + 3.6px, 1.2rem); line-height: 1.62; max-width: 68ch; }
+.t-paper--memo .t-option-label, .t-paper--ultimatum .t-option-label { font-family: var(--mono); font-weight: 700; font-size: clamp(13px, 0.86vw + 6.4px, 1.05rem); }
 .t-paper--ultimatum .t-options { border-top: 2px solid #1c1710; }
 
 /* ---- mandate: the engraved calling card ---- */
 .t-paper--mandate { background: radial-gradient(140% 130% at 50% 0%, #f7f1df, #eadfbe); text-align: center; padding: clamp(24px, 4vh, 44px) clamp(24px, 3.4vw, 44px); box-shadow: 0 20px 46px rgba(0, 0, 0, 0.6), inset 0 0 0 6px transparent; }
 .t-paper--mandate::before { content: ''; position: absolute; inset: 7px; border: 1px solid var(--sepia); border-radius: 4px; pointer-events: none; }
-.t-mandate-orn { font-family: var(--serif-display); font-size: clamp(16px, 2vh, 20px); color: var(--sepia); letter-spacing: 0.5em; text-indent: 0.5em; }
-.t-mandate-patron { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3.4vh, 36px); font-variant: small-caps; letter-spacing: 0.04em; margin: 0.6vh 0 0.2vh; }
-.t-paper--mandate .t-title { font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 1.2vh, 12px); letter-spacing: 0.3em; text-transform: uppercase; color: var(--sepia-deep); margin: 0 0 1.2vh; }
-.t-paper--mandate .t-body { text-align: center; font-style: italic; }
+.t-mandate-orn { font-family: var(--serif-display); font-size: clamp(16px, 1.1vw + 7.6px, 1.5rem); color: var(--sepia); letter-spacing: 0.5em; text-indent: 0.5em; }
+.t-mandate-patron { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 2.1vw + 10.1px, 2.2rem); font-variant: small-caps; letter-spacing: 0.04em; margin: 0.6vh 0 0.2vh; }
+.t-paper--mandate .t-title { font-family: var(--mono); font-weight: 700; font-size: clamp(10px, 0.82vw + 3.8px, 0.85rem); letter-spacing: 0.3em; text-transform: uppercase; color: var(--sepia-deep); margin: 0 0 1.2vh; }
+.t-paper--mandate .t-body { text-align: center; font-style: italic; margin: 0 auto; }
 .t-paper--mandate .t-options { border-top: none; align-items: center; }
 .t-paper--mandate .t-option { text-align: center; border-style: solid; border-color: var(--sepia); background: transparent; width: min(340px, 100%); }
 .t-paper--mandate .t-option-label { font-variant: small-caps; font-weight: 700; letter-spacing: 0.06em; }
@@ -304,34 +304,34 @@
 .t-paper--outcome .t-title { padding-right: clamp(88px, 12vw, 140px); }
 .t-outcome-text { margin-top: 0.4vh; }
 .t-delta-ledger { margin-top: 1.4vh; border-top: 2px solid var(--ink); padding-top: 0.8vh; }
-.t-delta-row { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: clamp(11px, 1.2vw, 13px); letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
+.t-delta-row { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: clamp(11px, 0.95vw + 3.8px, 0.95rem); letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
 .t-delta-row .n { font-weight: 700; }
 .t-delta-row .n.up { color: var(--green); }
 .t-delta-row .n.down { color: var(--red); }
-.t-sketch { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.35vw, 16px); line-height: 1.45; color: var(--ink-soft); margin: 0.8vh 0 0; }
+.t-sketch { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.05vw + 5.1px, 1.1rem); line-height: 1.45; color: var(--ink-soft); margin: 0.8vh 0 0; }
 .t-sketch::before { content: '— '; color: var(--sepia); }
 .t-dismiss { align-self: center; margin-top: 1.6vh; }
 
 /* ---- the division slip: The Record ∥ The Republic ---- */
 .t-paper--slip { background: radial-gradient(120% 120% at 18% 0%, var(--paper-1) 0%, var(--paper-2) 55%, var(--paper-3) 100%); }
 .t-slip-head { flex: none; border-bottom: 2px solid var(--red); padding-bottom: 0.8vh; margin-bottom: 1.2vh; padding-right: 110px; }
-.t-slip-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 2.6vw, 32px); line-height: 1.02; margin: 0.3vh 0 0; }
+.t-slip-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 3.1vw - 3.5px, 2.1rem); line-height: 1.02; margin: 0.3vh 0 0; }
 .t-slip-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.2vw; }
 .t-slip-col { min-width: 0; padding: 0.2vh 0 1vh; }
 .t-slip-col + .t-slip-col { border-left: 1px dashed var(--rule); padding-left: 2.2vw; }
-.t-slip-sec { font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 1.15vw, 13px); letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); border-bottom: 1px solid var(--rule); padding-bottom: 4px; margin-bottom: 0.9vh; }
-.t-slip-vote { font-family: var(--serif-display); font-weight: 700; font-size: clamp(17px, 1.9vw, 23px); margin-bottom: 0.6vh; }
-.t-slip-line { font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); line-height: 1.45; color: var(--ink-soft); margin: 0 0 0.5vh; }
+.t-slip-sec { font-family: var(--mono); font-weight: 700; font-size: clamp(11px, 0.95vw + 3.8px, 0.95rem); letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); border-bottom: 1px solid var(--rule); padding-bottom: 4px; margin-bottom: 0.9vh; }
+.t-slip-vote { font-family: var(--serif-display); font-weight: 700; font-size: clamp(17px, 1.6vw + 4.9px, 1.5rem); margin-bottom: 0.6vh; }
+.t-slip-line { font-family: var(--serif-body); font-size: clamp(13px, 1.05vw + 5.1px, 1.1rem); line-height: 1.45; color: var(--ink-soft); margin: 0 0 0.5vh; }
 .t-slip-line .n { font-family: var(--mono); font-weight: 700; font-size: 0.88em; }
 .t-slip-line .n.up { color: var(--green); }
 .t-slip-line .n.down { color: var(--red); }
 .t-slip-figures { display: flex; align-items: baseline; gap: 1.4vw; font-family: var(--mono); font-weight: 700; margin-bottom: 0.8vh; }
-.t-slip-figures .fig { font-size: clamp(22px, 2.8vw, 34px); }
-.t-slip-figures .cap { font-size: 10px; letter-spacing: 0.18em; color: var(--sepia); }
+.t-slip-figures .fig { font-size: clamp(22px, 3.7vw - 6.3px, 2.4rem); }
+.t-slip-figures .cap { font-size: clamp(10px, 0.45vw + 6.5px, 0.75rem); letter-spacing: 0.18em; color: var(--sepia); }
 .t-slip-figures .ayes { color: var(--green); }
 .t-slip-figures .noes { color: var(--red); }
 .t-slip-bloc-rows { border-top: 1px solid var(--rule); margin-bottom: 0.8vh; }
-.t-slip-bloc-row { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: clamp(11px, 1.1vw, 12px); padding: 3px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
+.t-slip-bloc-row { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: clamp(11px, 0.77vw + 5.1px, 0.9rem); padding: 3px 0; border-bottom: 1px dotted rgba(122, 92, 46, 0.45); }
 .t-slip-bloc-row .bn { text-transform: uppercase; letter-spacing: 0.08em; }
 .t-slip-foot { flex: none; display: flex; align-items: center; justify-content: center; gap: 14px; border-top: 1px dashed var(--rule); padding-top: 1vh; margin-top: 0.4vh; }
 
@@ -357,10 +357,10 @@
   from { opacity: 0; transform: translateY(28px); }
   to { opacity: 1; transform: none; }
 }
-.t-ribbon .stamp { flex: none; font-size: 10px; padding: 3px 8px; border-width: 2px; transform: rotate(-4deg); }
-.t-ribbon-figs { flex: none; font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.3vw, 15px); letter-spacing: 0.06em; }
-.t-ribbon-title { min-width: 0; font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.3vw, 15px); color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.t-ribbon-hint { flex: none; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); }
+.t-ribbon .stamp { flex: none; font-size: clamp(10px, 0.45vw + 6.5px, 0.75rem); padding: 3px 9px; border-width: 2px; transform: rotate(-4deg); }
+.t-ribbon-figs { flex: none; font-family: var(--mono); font-weight: 700; font-size: clamp(12px, 1.1vw + 3.7px, 1.05rem); letter-spacing: 0.06em; }
+.t-ribbon-title { min-width: 0; font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.1vw + 3.7px, 1.05rem); color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.t-ribbon-hint { flex: none; font-family: var(--mono); font-size: clamp(9px, 0.5vw + 5.2px, 0.75rem); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia); }
 
 /* ============================ the bargaining sheet ============================ */
 
@@ -370,32 +370,32 @@
     linear-gradient(180deg, #f2ead0, #e6d8b0);
   padding-left: clamp(56px, 6vw, 74px);
 }
-.t-sheet-letterhead { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 2.5vw, 30px); font-variant: small-caps; letter-spacing: 0.05em; text-align: center; }
-.t-sheet-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--sepia-deep); text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 1.2vh; }
+.t-sheet-letterhead { font-family: var(--serif-display); font-weight: 700; font-size: clamp(20px, 2.75vw - 0.7px, 2rem); font-variant: small-caps; letter-spacing: 0.05em; text-align: center; }
+.t-sheet-sub { font-family: var(--mono); font-size: clamp(9px, 0.7vw + 3.7px, 0.75rem); letter-spacing: 0.22em; text-transform: uppercase; color: var(--sepia-deep); text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin-bottom: 1.2vh; }
 .t-paper--sheet .t-kick { text-align: center; margin-bottom: 0.8vh; }
 .t-sheet-terms { margin: 1.2vh 0 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 0.8vh; }
-.t-sheet-terms li { font-family: var(--serif-body); font-size: clamp(13px, 1.35vw, 16px); line-height: 1.5; color: var(--ink-soft); }
+.t-sheet-terms li { font-family: var(--serif-body); font-size: clamp(13px, 1.6vw + 0.9px, 1.25rem); line-height: 1.5; color: var(--ink-soft); max-width: 68ch; }
 .t-sheet-terms li::marker { font-family: var(--mono); font-weight: 700; color: var(--red); }
 .t-term-label { font-weight: 700; font-variant: small-caps; color: var(--ink); }
 .t-sheet-signatures { flex: none; display: flex; gap: 2.4vw; margin-top: 2vh; }
 .t-sig { flex: 1; min-width: 0; text-align: center; }
-.t-sig-scrawl { display: block; height: clamp(30px, 4.2vh, 42px); font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 3.2vh, 30px); color: #3a2c16; transform: rotate(-2deg); }
+.t-sig-scrawl { display: block; height: clamp(30px, 5vw - 8px, 52px); font-family: var(--hand); font-weight: 600; font-size: clamp(22px, 2.3vw + 4.7px, 2rem); color: #3a2c16; transform: rotate(-2deg); }
 .t-sig-scrawl.blank { color: transparent; }
 .t-sig-rule { border-top: 1.5px solid var(--ink); margin-top: -4px; }
-.t-sig-cap { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia-deep); margin-top: 4px; }
+.t-sig-cap { font-family: var(--mono); font-size: clamp(9px, 0.7vw + 3.7px, 0.75rem); letter-spacing: 0.16em; text-transform: uppercase; color: var(--sepia-deep); margin-top: 4px; }
 .t-sheet-actions { flex: none; display: flex; justify-content: center; gap: 10px; margin-top: 1.8vh; }
 
 /* ============================ shared buttons ============================ */
 
 .t-btn {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: clamp(11px, 0.6vw + 6.5px, 0.85rem);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--red);
   border: 1.5px solid var(--red);
   border-radius: 6px;
-  padding: 9px 16px;
+  padding: clamp(9px, 1.2vh, 13px) clamp(16px, 1.4vw, 24px);
   background: rgba(158, 43, 37, 0.06);
   transition: background 0.12s;
 }
@@ -483,10 +483,52 @@
 .t-redact { display: block; height: 9px; background: #1c1710; border-radius: 1px; margin: 5px 0; }
 .t-clipping-note { font-family: var(--hand); font-size: clamp(15px, 1.9vh, 19px); color: var(--red-bright); transform: rotate(-1.4deg); margin-top: 8px; }
 
+/* ============================ desktop (≥1200px) ============================ */
+/* Documents sized like papers held close: the chassis stands ~55–70vh tall,
+   body reads at ~1.4rem over ≤72ch, hand notes stay legible. */
+
+@media (min-width: 1200px) {
+  .t-artifact-wrap { gap: 1.6vh; padding: 3vh 2vw; }
+
+  .t-paper {
+    min-height: 56vh;
+    padding: clamp(26px, 4vh, 44px) clamp(32px, 2.6vw, 52px);
+  }
+  .t-paper--letter { padding: clamp(34px, 5.5vh, 60px) clamp(40px, 4.5vw, 76px); }
+  .t-paper--mandate { padding: clamp(30px, 4.5vh, 52px) clamp(30px, 3vw, 52px); }
+  .t-paper--whipnote { padding: clamp(24px, 3.5vh, 38px) clamp(28px, 2.4vw, 44px); }
+  .t-paper--sheet { padding-left: clamp(64px, 5.5vw, 84px); }
+
+  /* content sits on the upper face; actions settle to the paper's foot */
+  .t-whip-ack { margin-top: auto; }
+  .t-options { gap: 12px; margin-top: 2vh; padding-top: 1.8vh; }
+  .t-option { padding: 14px 20px; }
+  .t-option-tag { font-size: 0.95rem; letter-spacing: 0.16em; margin-bottom: 4px; }
+  .t-option-detail { margin-top: 4px; }
+  .t-dismiss { margin-top: 2vh; }
+
+  /* Courier labels hold ≥0.95rem on the big desk */
+  .t-memo-field .k { font-size: 0.95rem; width: 5.2em; }
+  .t-precfoot-label { font-size: 0.95rem; }
+  .t-slip-figures .cap { font-size: 0.95rem; }
+
+  .t-tg-route { padding-right: 120px; }
+  .t-slip-head { padding-right: 140px; }
+  .t-slip-foot { padding-top: 1.4vh; }
+  .t-memo-field { padding: 7px 2px; }
+  .t-delta-ledger { padding-top: 1.2vh; }
+  .t-precfoot { gap: 6px 18px; padding-top: 1.2vh; }
+
+  .t-ribbon { max-width: min(980px, 94%); padding: 14px 24px; gap: 16px; }
+}
+
 /* ============================ mobile ============================ */
 
 @media (max-width: 760px) {
   .t-artifact-wrap { padding: 1.6vh 3vw; }
+  .t-flip, .t-flip--frontpage, .t-flip--slip { width: 96%; }
+  .t-flip--letter, .t-flip--memo, .t-flip--ultimatum, .t-flip--sheet, .t-flip--outcome { width: 94%; }
+  .t-flip--mandate, .t-flip--whipnote { width: 92%; }
   .t-paper { padding: 14px 16px; }
   .t-paper--letter { padding: 22px 20px; }
   .t-paper--sheet { padding-left: 40px; background: linear-gradient(90deg, transparent 0 28px, rgba(158, 43, 37, 0.28) 28px 29px, transparent 29px), linear-gradient(180deg, #f2ead0, #e6d8b0); }

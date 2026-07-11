@@ -3,7 +3,8 @@ import { blocLabel } from '../artifacts/bits'
 
 const REDACT_WIDTHS = ['84%', '92%', '71%', '88%', '55%']
 
-function dueLine(deadline: number, position: number): string {
+/** "falls due in N divisions" — shared by the ledger books and the standing rail. */
+export function dueLine(deadline: number, position: number): string {
   const n = deadline - position
   if (n <= 0) return 'falls due now'
   return `falls due in ${n} division${n === 1 ? '' : 's'}`

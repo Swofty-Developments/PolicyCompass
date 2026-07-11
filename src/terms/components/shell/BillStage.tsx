@@ -12,6 +12,7 @@ export function BillStage({
   actTitle,
   officeLabel,
   knifeEdge,
+  ledgerUnlocked,
   onOpenLedger,
   onExit,
   onAbandon,
@@ -23,6 +24,7 @@ export function BillStage({
   actTitle: string
   officeLabel: string
   knifeEdge: boolean
+  ledgerUnlocked: boolean
   onOpenLedger: () => void
   onExit: () => void
   onAbandon: () => void
@@ -34,6 +36,7 @@ export function BillStage({
       positionLabel={`Division ${divisionNo} of ${divisionsTotal}`}
       officeLabel={officeLabel}
       knifeEdge={knifeEdge}
+      ledgerUnlocked={ledgerUnlocked}
       onOpenLedger={onOpenLedger}
       onExit={onExit}
       onAbandon={onAbandon}

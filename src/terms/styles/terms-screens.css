@@ -26,8 +26,8 @@
 .t-cf-sub { font-family: var(--serif-body); font-style: italic; font-size: 12px; opacity: 0.7; }
 .t-cf-open { flex: none; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); }
 
-/* ---- shell: the docket frame ---- */
-.t-run { flex-direction: column; }
+/* ---- shell: the docket frame (fills the desk's centre column) ---- */
+.t-run { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
 .t-strip {
   flex: none; height: 34px; display: flex; align-items: center; justify-content: space-between;
   gap: 10px; padding: 0 12px; background: rgba(12, 8, 5, 0.72);
@@ -54,6 +54,8 @@
 
 /* ---- generic artifact stage (one paper on the desk) ---- */
 .t-stagewrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+/* the centre column's stage: positioned so absolute artifact wraps fill it */
+.t-stage { position: relative; display: flex; flex: 1; min-width: 0; min-height: 0; }
 
 .t-missing { max-width: 520px; padding: 3vh 2.5vw; text-align: center; font-family: var(--serif-body); }
 .t-missing p { line-height: 1.5; }
