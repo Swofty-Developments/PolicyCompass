@@ -166,7 +166,10 @@
 /* ---- the archive (filing cabinet) ---- */
 .t-cabinet-wrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
 .t-cabinet {
-  width: min(760px, 100%); max-height: 92vh; overflow-y: auto;
+  width: min(760px, 100%);
+  max-height: 92vh; /* fallback for engines without dvh */
+  max-height: 92dvh;
+  overflow-y: auto;
   padding: clamp(20px, 3.5vh, 36px) clamp(22px, 3.5vw, 44px);
   scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
 }
@@ -198,9 +201,16 @@
   .desk .t-career-folder { padding: 10px 12px; gap: 10px; }
   .desk .t-letter { max-height: none; height: 100%; padding: 18px 6vw; }
   .desk .t-obit { padding: 2vh 4.5vw; }
-  .desk .t-obit-head { padding-left: 0; padding-right: 0; padding-top: 52px; }
+  /* 84px clears the stamp stack even when CUT SHORT doubles it */
+  .desk .t-obit-head { padding-left: 0; padding-right: 0; padding-top: 84px; }
   .desk .t-obit-body { display: flex; flex-direction: column; gap: 1.6vh; }
   .desk .t-brags { grid-template-columns: repeat(2, 1fr); }
   .desk .t-swing, .desk .t-officer { width: 100%; }
   .desk .t-obit-actions .t-btn { flex: 1 1 40%; }
 }
+
+/* ---- Emergency Whip: leader-only toggle on the docket strip (appended) ---- */
+.t-strip-btn.t-whip { border-style: dashed; color: #c98d5a; border-color: rgba(201, 141, 90, 0.55); }
+.t-strip-btn.t-whip.arm { border-style: solid; border-color: var(--red-bright); color: var(--red-bright); background: rgba(194, 64, 58, 0.12); }
+.t-strip-btn.t-whip:disabled { opacity: 0.4; cursor: default; }
+.t-strip-btn.t-whip:disabled:hover { background: none; }

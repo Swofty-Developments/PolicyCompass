@@ -19,9 +19,16 @@
   text-decoration: underline dotted rgba(176, 142, 84, 0.5);
 }
 .t-dlg-skip:hover { color: var(--red-bright); }
+/* the long skip copy overlaps the centered header below ~1280px; swap in the
+   short label there (label swap, not ellipsis, so the ' ›' suffix survives) */
+.t-dlg-skip-full { display: none; }
+@media (min-width: 1280px) {
+  .t-dlg-skip-full { display: inline; }
+  .t-dlg-skip-short { display: none; }
+}
 
 /* prologue corner links, overlaid by Prologue beside the scene */
-.t-dlg-corner { position: fixed; top: 8px; left: 12px; z-index: 6; display: flex; gap: 14px; }
+.t-dlg-corner { position: fixed; top: 8px; left: 12px; z-index: 6; display: flex; flex-wrap: wrap; gap: 14px; max-width: calc(100vw - 24px); }
 .t-dlg-cornerbtn {
   background: none; border: none; padding: 6px 2px;
   font-family: var(--mono); font-size: clamp(10px, 0.55vw + 5.8px, 0.85rem); letter-spacing: 0.14em; text-transform: uppercase;
@@ -116,6 +123,8 @@
 @media (max-width: 760px) {
   .t-dlg-litho { height: 34vh; max-width: 86vw; border-width: 5px; }
   .t-dlg-header { left: 12px; transform: none; max-width: 58vw; overflow: hidden; text-overflow: ellipsis; }
+  /* the header takes the left of the top strip; corner controls drop below it */
+  .t-dlg-corner { top: 38px; }
   .t-dlg-foot { width: 100%; padding: 1vh 3vw 2vh; position: sticky; bottom: 0; }
   .t-dlg-opts { max-height: 40vh; }
   .t-dlg-line { font-size: clamp(14px, 4vw, 16px); }
@@ -124,6 +133,7 @@
 
 /* One-time dropped-career notice under the corner controls */
 .t-dlg-notice {
+  flex-basis: 100%;
   max-width: 34ch;
   margin-top: 0.5vh;
   font-family: var(--hand);

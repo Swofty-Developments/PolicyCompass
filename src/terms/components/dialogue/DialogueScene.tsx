@@ -18,6 +18,7 @@ export function DialogueScene({
   onDone,
   header,
   skipLabel,
+  skipLabelShort,
 }: {
   scene: { beats: Beat[] }
   characters: Character[]
@@ -25,6 +26,8 @@ export function DialogueScene({
   onDone: () => void
   header?: string
   skipLabel?: string
+  /** Swapped in below 1280px, where the full label would overlap the header */
+  skipLabelShort?: string
 }) {
   const beats = scene.beats
   const [idx, setIdx] = useState(0)
@@ -91,7 +94,15 @@ export function DialogueScene({
           skip()
         }}
       >
-        {skipLabel ?? 'Skip'} ›
+        {skipLabelShort ? (
+          <>
+            <span className="t-dlg-skip-full">{skipLabel ?? 'Skip'}</span>
+            <span className="t-dlg-skip-short">{skipLabelShort}</span>
+          </>
+        ) : (
+          skipLabel ?? 'Skip'
+        )}{' '}
+        ›
       </button>
 
       <div className="t-dlg-stage">

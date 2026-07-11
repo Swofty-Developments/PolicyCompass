@@ -41,10 +41,12 @@
 }
 .t-flip-inner { position: relative; display: flex; width: 100%; min-height: 0; transform-style: preserve-3d; }
 .t-face { min-height: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.t-face-front { position: relative; display: flex; width: 100%; min-height: 0; }
-.t-face-back { position: absolute; inset: 0; display: flex; transform: rotateY(180deg); pointer-events: none; }
-.t-flip-inner.is-flipped .t-face-front { pointer-events: none; }
-.t-flip-inner.is-flipped .t-face-back { pointer-events: auto; }
+/* visibility keeps the hidden face's buttons/links out of the tab order and the
+   a11y tree; hiding waits past the flip's 90° midpoint, showing is immediate. */
+.t-face-front { position: relative; display: flex; width: 100%; min-height: 0; transition: visibility 0s; }
+.t-face-back { position: absolute; inset: 0; display: flex; transform: rotateY(180deg); pointer-events: none; visibility: hidden; transition: visibility 0s 0.3s; }
+.t-flip-inner.is-flipped .t-face-front { pointer-events: none; visibility: hidden; transition: visibility 0s 0.3s; }
+.t-flip-inner.is-flipped .t-face-back { pointer-events: auto; visibility: visible; transition: visibility 0s; }
 
 .t-flip--frontpage { width: min(1040px, 96%); }
 .t-flip--letter { width: min(780px, 88%); }
@@ -535,6 +537,8 @@
   .t-title { font-size: clamp(20px, 6vw, 28px); }
   .t-tg-route { padding-right: 72px; }
   .t-paper--outcome .t-title { padding-right: 80px; }
+  /* reserve the stamp corner (14px offset + ~124px stamp − 16px paper padding) */
+  .t-memo-title { padding-right: 124px; text-align: left; }
   .t-body { font-size: clamp(14px, 4vw, 16px); }
   .t-paper--frontpage .t-title { font-size: clamp(24px, 8vw, 34px); }
   .t-fp-body { column-count: 1; }
@@ -546,6 +550,8 @@
   .t-precfoot { display: none; }
   .t-fold { display: block; }
   .t-fold-hint { display: block; }
+  /* keep the 54px fold tap-target (and its hint) clear of the last option slip */
+  .t-paper:has(.t-fold) .t-options { margin-bottom: 48px; }
 
   /* the slip stacks its two ledgers */
   .t-slip-cols { grid-template-columns: 1fr; }
