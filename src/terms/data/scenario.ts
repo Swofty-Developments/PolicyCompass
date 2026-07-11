@@ -82,7 +82,7 @@ const actOne: Act = {
       expectTitle: 'The Firearms Act: A National Registry for Every Gun, Including Rifles and Shotguns',
       whip: {
         ratify: true,
-        note: 'Your first outing. The Registry has every front bench’s word behind it — vote aye and be seen voting. — W.',
+        note: 'Your first orders from this office. Every party wants the Registry passed — vote for it, and be seen voting for it. — W.',
       },
     },
     { kind: 'event', eventId: 'ev-memo-pollster' },
@@ -114,7 +114,7 @@ const actOne: Act = {
       expectTitle: 'The Code for Fiscal Stability: The Golden Rule and the Sustainable Investment Rule',
       whip: {
         ratify: true,
-        note: 'Sound money is the one hymn all three benches sing. The Rule passes with or without you; see that it is with. — W.',
+        note: 'Sound money is the one hymn all three parties sing. The Rule passes with or without you; see that it is with. — W.',
       },
       treasury: 4,
     },
@@ -137,7 +137,7 @@ const actTreasury: Act = {
       expectTitle: 'The Debt Brake: A Constitutional Cap on Government Spending',
       whip: {
         ratify: true,
-        note: 'You wanted the Treasury; the Brake is the Treasury. If the Chancellor’s own bench wavers, the House smells blood. — W.',
+        note: 'You wanted the Treasury; the Brake is the Treasury. If the Chancellor’s own minister wavers, the House smells blood. — W.',
       },
       treasury: 7,
     },
@@ -180,7 +180,7 @@ const actHome: Act = {
       expectTitle: 'Serious Violence Reduction Orders: Suspicionless Stop and Search of Convicted Knife Carriers',
       whip: {
         ratify: true,
-        note: 'Your bill, your box, your name on the order paper. The Department does not lose its first division. — W.',
+        note: 'Your bill, your name on it. The Department does not lose its first vote. — W.',
       },
     },
     { kind: 'bill', billId: 'bill-44', expectTitle: 'The Violent Crime Control and Law Enforcement Act', treasury: -4 },
@@ -218,7 +218,7 @@ const actWilderness: Act = {
       expectTitle: "Legalise Euthanasia on a Patient's Request",
       whip: {
         ratify: false,
-        note: 'You are out, not gone. Strike this one quietly and there are men here who will remember you kindly. — W.',
+        note: 'You are out, not gone. Vote this one down quietly and there are men here who will remember you kindly. — W.',
       },
     },
     { kind: 'bill', billId: 'bill-84', expectTitle: 'Divorce, Dissolution and Separation Act 2020: No-Fault Divorce' },
@@ -231,7 +231,7 @@ const actWilderness: Act = {
       expectTitle: "On the Protection of Women's Health — Legalizing Abortion on Request",
       whip: {
         ratify: false,
-        note: 'They say it may come down to a single seat — imagine that. The machine wants it dead. Do this and come home. — W.',
+        note: 'They say it may come down to a single vote — imagine that. The party wants it dead. Do this and come home. — W.',
       },
       treasury: -2,
     },
@@ -303,11 +303,11 @@ export const scenario: Scenario = {
   id: 'member-for-halloway',
   title: 'The Member for Halloway',
   intro:
-    'OFFICE OF THE RETURNING OFFICER, HALLOWAY. To the Member-elect: the count is certified and the writ returned — Halloway sends you to the House. Two matters remain before the oath. First, the benches: no member sits alone, and the party whose whip you accept will colour every vote you cast and every kindness you are owed. Second, the ground beneath you: a member is only ever as safe as their seat. Choose both as though your career depends on them. It does.',
+    'OFFICE OF THE RETURNING OFFICER, HALLOWAY. To the Member-elect: you have won your election. Halloway sends you to the House — the parliament of this Republic — and every law you vote on there will be a real one, drawn from real history. Two choices remain before the oath. First, your party: the side whose voting orders you will be expected to follow. Second, your seat: how safe you are when the next election comes. Choose both as though your career depends on them. It does.',
   seatBlurbs: {
-    safe: 'The party’s machine seat. A majority built by other hands over forty years — you would have to work at losing it. But what the machine gives, the machine prices: defiance of the whip from a safe seat is remembered twice as hard.',
+    safe: 'Nearly impossible to lose at an election — the party machine built this majority long before you arrived. But the machine owns you: defy its voting orders and the party punishes you twice as hard.',
     marginal:
-      'Your own ground, held by your own name and a majority that would fit in a tram. Every promise matters here — the ledger keeps room for one more — and the whip’s hand rests lighter on a member the party might lose.',
+      'A seat you can genuinely lose — the majority would fit in a tram. In return you are your own: an extra promise slot in your ledger, and defying the party’s orders costs you half as much.',
   },
   blocs,
   characters,

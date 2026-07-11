@@ -6,8 +6,8 @@ export function marginaliaFor(state: TermsState, surface: 'whipnote' | 'slip'): 
   if (state.termsServed > 0) return undefined
   if (state.flags[`seen.margin.${surface}`]) return undefined
   if (surface === 'whipnote' && state.whipNotesThisTerm <= 1)
-    return 'The party watches every division. Cross the whip and your own benches cool — relations, they call it.'
+    return 'A division is a vote of the whole House, and this card is your party’s order for it. Defy it and your Relations with the party drop — twice as hard from a safe seat.'
   if (surface === 'slip' && state.votes.length === 2)
-    return 'The House passes bills, not you — but the record is yours.'
+    return 'Your single vote rarely decides whether a bill passes — the whole House does. But how you voted is on your record for good.'
   return undefined
 }

@@ -34,9 +34,9 @@ export function Prologue({
       <DialogueScene
         scene={scene}
         characters={scenario.characters}
-        header={`${scenario.title} · The Writ Returned`}
-        skipLabel="Proceed directly to the House"
-        skipLabelShort="To the House"
+        header={`${scenario.title} · Your First Day`}
+        skipLabel="Skip the introductions"
+        skipLabelShort="Skip"
         onChoice={(_choiceIndex, optionId) => {
           // Seat option ids are fixed; anything else is a bloc id.
           if (optionId === 'safe' || optionId === 'marginal') setSeatType(optionId)

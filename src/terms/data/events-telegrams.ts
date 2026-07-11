@@ -294,13 +294,13 @@ export const telegramEvents: TermsEvent[] = [
     kind: 'memo',
     title: 'A NOTE ON THE MEMBER’S STANDING',
     body:
-      'You will forgive a tradesman’s bluntness: sentiment can be counted, and I am paid to count it. My canvass puts the House’s confidence in you in the middle fifties — comfortable, for now. Members fall when the figure sinks below twenty; the whips begin talking somewhat before that. Your ledger — the grey strip above the order paper — keeps the same accounts I do: confidence, conviction, the Treasury’s balance, and what each bloc thinks of you. Consult it as you would a barometer. Gentlemen who navigate by feel alone end up as weather.',
+      'You will forgive a tradesman’s bluntness: opinion can be counted, and I am paid to count it. Three figures now govern your career. Confidence is the public’s trust in you — yours stands in the middle fifties, comfortable; a member whose figure sinks below twenty is in danger of being finished. Conviction is how consistent your voting record is — the House punishes a flip-flopper, and the trouble starts below forty. The Exchequer is the Republic’s money, which the laws you pass spend or refill. All three sit on the Standing rail beside your desk; the Ledger button above the order paper opens the full accounts. Consult them as you would a barometer. Gentlemen who navigate by feel alone end up as weather.',
     byline: 'J. Ashworth, canvasser, by appointment to the party',
     options: [
       {
         id: 'acknowledge',
         label: 'File the canvasser’s note where you will find it again.',
-        detail: 'The ledger keeps the running figures; the strip above the order paper opens it.',
+        detail: 'Confidence, Conviction, Exchequer — watch them on the Standing rail; the Ledger keeps the full accounts.',
       },
     ],
     precedents: [
@@ -312,13 +312,13 @@ export const telegramEvents: TermsEvent[] = [
     kind: 'ultimatum',
     title: 'FROM THE OFFICE OF THE CHIEF WHIP',
     body:
-      'It is past midnight and I will be brief. Confidence stands at {figure}. Below twenty, the House talks; it is talking now — in the smoking room, in the lobbies, in paragraphs the sketch-writers have already filed. I have served four leaders and buried three, and I tell you the arithmetic is neither cruel nor kind. It is only arithmetic. Bring the figure back to thirty before the term ends, or the motion of no confidence will be tabled, and I will not be able to stop it.',
+      'It is past midnight and I will be brief. Confidence — the public’s trust in you — stands at {figure}. Below twenty, the party starts planning a member’s replacement, and it is planning yours: in the smoking room, in the lobbies, in paragraphs the sketch-writers have already filed. So hear it plainly. Bring Confidence back to thirty before this term ends, or the House votes no confidence in you and your career is over. I have served four leaders and buried three; the arithmetic is neither cruel nor kind, and I will not be able to stop it.',
     byline: 'The Chief Whip',
     options: [
       {
         id: 'acknowledge',
         label: 'There is nothing to answer. Turn down the lamp and count the ways back.',
-        detail: 'Confidence must reach thirty before the term ends. Promises kept, divisions matched to the mood, the party obeyed — every point counts.',
+        detail: 'Reach Confidence thirty before the term ends — keep promises, vote with the public mood, obey the whip. Every point counts.',
         effects: { setFlags: { ultimatum: true } },
       },
     ],
