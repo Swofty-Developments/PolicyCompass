@@ -142,3 +142,10 @@
   opacity: 0.9;
   transform: rotate(-1.2deg);
 }
+
+/* A tall choice sheet shares the stage: the portrait yields so its head
+   stays on screen. */
+.t-dlg--choice .t-dlg-litho { height: min(38vh, 420px); }
+@media (max-width: 760px) {
+  .t-dlg--choice .t-dlg-litho { height: 24vh; }
+}

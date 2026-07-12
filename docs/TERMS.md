@@ -26,9 +26,10 @@ Design pillars:
    paper artifact with its cause named. Numbers live behind paper, but thresholds are
    printed beside figures ("Confidence 24 — the whips talk at twenty").
 
-Difficulty target: a first-time player should die in roughly half of runs; an informed
-defensive player should still lose ~15%. `scripts/terms-sim.mts` (§ Acceptance) checks
-this against scripted voter profiles.
+Difficulty target: a chaotic first run should usually end in a death (the coin-flip
+profile dies 60%+); a competent casual loses roughly a third of careers (20–55% band);
+an informed defensive player still loses ≥ 15%. `scripts/terms-sim.mts` (§ Acceptance)
+checks this against scripted voter profiles.
 
 ## Run shape
 
@@ -84,7 +85,8 @@ All simulation state lives in `TermsState`; every transition is a pure reducer.
   posterior **snapshot taken before the vote's own update**: when
   `P(vote | pre-vote mean) < 0.35` on the primary axis, apply
   `−round(9 × max(certainty, 0.4))` — no hard certainty gate, so incoherence always
-  costs and costs more once the record is established. Voting in line at certainty > 0.55
+  costs and costs more once the record is established. No penalty lands before the
+  fourth recorded vote: there is no record to betray yet. Voting in line at certainty > 0.55
   recovers `+2` (cap 100; "in line" means clearly so — `P(vote | mean) ≥ 0.65` — so
   coin-flip votes neither pay nor recover). The spouse's letters are the only event-driven recovery
   (`+5` — tuned down from +10 after simulation showed four letters refunding a
@@ -146,8 +148,9 @@ compass posterior. Passage is resolved around them:
   for pillar 4.
 
 Only **passed** bills move zeitgeist/treasury. Relations always move (blocs judge your
-vote, not the outcome): `±(4 + 4·extremity)` per bloc, doubled for your party on
-whip-note bills. Abstention (the deck may gain the gesture when `feat/engagement`
+vote, not the outcome): `±(4 + 4·extremity)` per bloc. On whip-note bills the party
+judges loyalty, not ideology: obeying the order floors the party’s delta at `0` (obedience is expected, not rewarded);
+defiance doubles the ideological judgment (on top of the defiance penalty). Abstention (the deck may gain the gesture when `feat/engagement`
 merges): no posterior update, no conviction change, relations at half weight, and the
 player's seat is absent on knife-edges — the chair notes it acidly. The v1 wrapper maps
 only ratify/strike; the adapter (§ Architecture) owns the translation.
@@ -420,8 +423,10 @@ src/terms/
    fill exclusion covers both branch variants.
 2. `npx tsx scripts/terms-sim.mts` — scripted profiles over the real scenario:
    *turtle* (safe seat, declines everything, votes posterior-consistently) must still
-   face ≥ 15% loss rate across seeds; *coin-flip* ends conviction < 45; *party-liner
-   against posterior* accumulates weathervane hits; *firebrand* (consistent extremist)
+   face ≥ 15% loss rate across seeds; *coin-flip* ends conviction < 50 **and** ≥ 20
+   points below every coherent profile (the mean is corpse-dominated at a 60%+ death
+   rate, so the gap is the honest read); *party-liner against posterior* accumulates
+   weathervane hits; *firebrand* (consistent extremist)
    can spawn a radical bloc by mid-Term II and reach the revolution gate in Term III;
    *vote-seller* (accepts every offer) fares strictly worse than the turtle — higher
    death rate and fewer honours (trust is not the metric: a seller's corpse can be

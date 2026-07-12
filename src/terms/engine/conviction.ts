@@ -9,6 +9,8 @@ export const WEATHERVANE_P = 0.35
 export const RECOVERY_P = 0.65
 export const RECOVERY_CERTAINTY = 0.55
 export const RECOVERY_DELTA = 2
+/** No penalty before this many recorded votes — there is no record to betray yet. */
+export const MIN_RECORD = 3
 
 export interface ConvictionScore {
   delta: number
@@ -19,14 +21,19 @@ export interface ConvictionScore {
 }
 
 /** Score a vote against the pre-vote posterior. Abstain never moves the meter. */
-export function scoreVote(pre: Posteriors, bill: Bill, choice: VoteChoice): ConvictionScore {
+export function scoreVote(
+  pre: Posteriors,
+  bill: Bill,
+  choice: VoteChoice,
+  votesOnRecord: number,
+): ConvictionScore {
   const l = bill.loadings[0]
   if (!l || choice === 'abstain') return { delta: 0, weathervane: false, pVote: 0.5, certainty: 0 }
   const m = mean(pre[l.axis])
   const c = certainty(pre[l.axis])
   const p = pRatify(m, l)
   const pVote = choice === 'ratify' ? p : 1 - p
-  if (pVote < WEATHERVANE_P) {
+  if (pVote < WEATHERVANE_P && votesOnRecord >= MIN_RECORD) {
     return { delta: -Math.round(9 * Math.max(c, 0.4)), weathervane: true, pVote, certainty: c }
   }
   if (pVote >= RECOVERY_P && c > RECOVERY_CERTAINTY) {

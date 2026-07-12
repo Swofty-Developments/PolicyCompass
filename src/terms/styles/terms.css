@@ -573,3 +573,7 @@
   .t-mood-k { width: 108px; }
   .t-corr-grid, .t-mandate-pins { grid-template-columns: 1fr; }
 }
+
+/* Terms-only: the flanked centre column is narrower than the compass gives the
+   card, so the key-figures chips may wrap rather than clip. */
+.t-run .b-stats { flex-wrap: wrap; }

@@ -17,8 +17,8 @@
 .t-rail { display: none; }
 
 @media (min-width: 1200px) {
-  .t-deskgrid { grid-template-columns: clamp(240px, 19vw, 330px) minmax(0, 1fr) clamp(240px, 19vw, 330px); }
-  .t-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 5vh 1.1vw 3vh; }
+  .t-deskgrid--railed { grid-template-columns: clamp(240px, 19vw, 330px) minmax(0, 1fr) clamp(240px, 19vw, 330px); }
+  .t-deskgrid--railed .t-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 5vh 1.1vw 3vh; }
 }
 
 .t-rail-inner {

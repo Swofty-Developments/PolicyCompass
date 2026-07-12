@@ -355,7 +355,7 @@ function resolveVote(
     fx.lines.push('The Emergency Whip is served — the party’s hesitants file behind the Member.')
   }
 
-  const conv = scoreVote(prev.posteriors, bill, choice)
+  const conv = scoreVote(prev.posteriors, bill, choice, prev.votes.length)
   const res = resolveDivision(s, scenario, bill, choice, { swungBlocId, emergencyWhip })
 
   if (choice !== 'abstain') {
@@ -385,7 +385,12 @@ function resolveVote(
     } else {
       delta = ((st >= 0.5) === (choice === 'ratify') ? 1 : -1) * (4 + 4 * e0)
     }
-    if (whip && bs.id === s.partyId) delta *= 2
+    if (whip && bs.id === s.partyId) {
+      // Obeying the party's own order is loyalty, whatever the member's
+      // ideology reads; only defiance doubles the judgment.
+      const obeying = choice === (whip.ratify ? 'ratify' : 'strike')
+      delta = obeying ? Math.max(delta, 0) : delta * 2
+    }
     addRelations(fx, scenario, bs.id, delta, `the division on “${bill.title}”`, 'division')
   }
 

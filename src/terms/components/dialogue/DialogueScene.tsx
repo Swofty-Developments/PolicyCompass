@@ -85,7 +85,7 @@ export function DialogueScene({
   const choice = beat && isChoiceBeat(beat) ? beat : null
 
   return (
-    <div className="desk t-dlg" onClick={advance}>
+    <div className={`desk t-dlg${choice ? ' t-dlg--choice' : ''}`} onClick={advance}>
       {header && <div className="t-dlg-header">{header}</div>}
       <button
         className="t-dlg-skip"
