@@ -1,0 +1,216 @@
+/* Terms — screens & shell chrome. Every class is t- prefixed; shared tokens
+   (.desk .sheet .stamp .kicker .hand .chip) come from theme.css. */
+
+/* ---- shared small controls (.t-btn itself lives in terms.css) ---- */
+.t-btn:disabled { opacity: 0.55; cursor: default; }
+.t-linkbtn {
+  background: none; border: none; padding: 4px 2px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sepia); text-decoration: underline dotted rgba(122, 92, 46, 0.6);
+}
+.t-linkbtn:hover { color: var(--red); }
+
+/* ---- home: the career folder on the desk ---- */
+.t-career-folder {
+  display: flex; align-items: center; gap: 14px;
+  width: min(760px, 100%); margin: 0 auto; padding: 12px 18px; text-align: left;
+  background: radial-gradient(120% 140% at 16% 0%, #e9d9b4, #d6c091);
+  border: 1px solid var(--rule); border-left: 5px solid var(--red);
+  border-radius: 8px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  color: var(--ink); cursor: pointer; transition: transform 0.14s, box-shadow 0.14s;
+}
+.t-career-folder:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5); }
+.t-cf-stamp { flex: none; font-size: 10px; padding: 4px 8px; border-width: 2.5px; transform: rotate(-7deg); }
+.t-cf-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.t-cf-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(17px, 1.8vw, 22px); line-height: 1.1; }
+.t-cf-sub { font-family: var(--serif-body); font-style: italic; font-size: 12px; opacity: 0.7; }
+.t-cf-open { flex: none; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); }
+
+/* ---- shell: the docket frame (fills the desk's centre column) ---- */
+.t-run { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+.t-strip {
+  flex: none; height: 34px; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 0 12px; background: rgba(12, 8, 5, 0.72);
+  border-bottom: 1px solid rgba(216, 181, 107, 0.28);
+}
+.t-strip-left { display: flex; align-items: baseline; gap: 12px; min-width: 0; overflow: hidden; }
+.t-strip-act { font-family: var(--serif-display); font-weight: 700; font-size: 14px; color: #e8d8ae; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t-strip-div, .t-strip-office { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #b08e54; white-space: nowrap; }
+.t-strip-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+.t-strip-btn {
+  background: none; border: 1px solid rgba(216, 181, 107, 0.4); border-radius: 4px;
+  padding: 3px 9px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #d8b56b;
+}
+.t-strip-btn:hover { background: rgba(216, 181, 107, 0.14); }
+.t-strip-btn.quiet { border-color: transparent; color: rgba(176, 142, 84, 0.75); }
+.t-strip-btn.quiet.arm { border-color: var(--red-bright); color: var(--red-bright); }
+.t-knife {
+  flex: none; text-align: center; padding: 4px 12px 2px;
+  font-size: clamp(16px, 2vh, 20px); color: var(--gold);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+.t-deckhost { position: relative; flex: 1; min-height: 0; }
+
+/* ---- generic artifact stage (one paper on the desk) ---- */
+.t-stagewrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+/* the centre column's stage: positioned so absolute artifact wraps fill it */
+.t-stage { position: relative; display: flex; flex: 1; min-width: 0; min-height: 0; }
+
+.t-missing { max-width: 520px; padding: 3vh 2.5vw; text-align: center; font-family: var(--serif-body); }
+.t-missing p { line-height: 1.5; }
+
+/* ---- prologue: the returning officer's letter ---- */
+.t-pro-wrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+.t-letter {
+  width: min(720px, 100%); max-height: 92vh; overflow-y: auto;
+  padding: clamp(20px, 4vh, 40px) clamp(22px, 4vw, 48px);
+  scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
+}
+.t-letter-kicker { text-align: center; font-size: 11px; letter-spacing: 0.28em; }
+.t-letter-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(30px, 5vw, 46px); line-height: 0.98; text-align: center; margin: 8px 0 2px; }
+.t-letter-rule { height: 2px; width: 58%; margin: 10px auto 16px; background: linear-gradient(90deg, transparent, var(--red), transparent); }
+.t-letter-body { font-family: var(--serif-body); font-size: clamp(14px, 1.4vw, 17px); line-height: 1.55; color: var(--ink-soft); margin: 0 0 12px; }
+.t-letter-note { font-size: clamp(16px, 1.8vw, 20px); text-align: center; margin: 4px 0 14px; transform: rotate(-1deg); }
+.t-letter-ask { font-size: 11px; letter-spacing: 0.22em; color: var(--red); text-align: center; margin-bottom: 10px; }
+.t-choices { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.t-choice {
+  display: flex; flex-direction: column; gap: 3px; text-align: left;
+  background: rgba(243, 231, 201, 0.65); border: 1px solid var(--rule); border-left: 4px solid var(--red);
+  border-radius: 6px; padding: 10px 14px; color: var(--ink); transition: background 0.12s, transform 0.12s;
+}
+.t-choice:hover { background: rgba(232, 208, 150, 0.8); transform: translateX(3px); }
+.t-choice-name { font-family: var(--serif-display); font-weight: 700; font-size: clamp(16px, 1.6vw, 20px); line-height: 1.1; }
+.t-choice-blurb { font-family: var(--serif-body); font-size: clamp(12.5px, 1.2vw, 15px); line-height: 1.45; color: var(--ink-soft); }
+.t-choice-cites { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sepia); }
+.t-back { align-self: flex-start; margin-bottom: 8px; }
+.t-pro-links { display: flex; justify-content: space-between; gap: 12px; border-top: 1px dashed var(--rule); padding-top: 10px; margin-top: 4px; }
+
+/* ---- election night ---- */
+.t-night { cursor: pointer; }
+.t-night-scroll {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center;
+  gap: 10px; padding: 4vh 2vw 6vh;
+}
+.t-night-head { font-size: 12px; letter-spacing: 0.3em; color: #d8b56b; margin-bottom: 1vh; }
+.t-swing {
+  width: min(560px, 100%); display: flex; align-items: baseline; gap: 12px;
+  padding: 10px 16px; border-left: 4px solid var(--sepia);
+}
+.t-swing.mine { border-left-color: var(--red); }
+.t-swing-name { flex: 1; min-width: 0; font-family: var(--serif-display); font-weight: 700; font-size: clamp(15px, 1.6vw, 19px); }
+.t-swing-tag { font-family: var(--serif-body); font-style: italic; font-weight: 400; font-size: 12px; color: var(--red); }
+.t-swing-count { font-family: var(--mono); font-size: 14px; color: var(--sepia-deep); white-space: nowrap; }
+.t-swing-delta { font-family: var(--mono); font-weight: 700; font-size: 14px; width: 3.5ch; text-align: right; color: var(--sepia); }
+.t-swing-delta.up { color: var(--green); }
+.t-swing-delta.down { color: var(--red); }
+.t-officer { width: min(560px, 100%); padding: 2.4vh 24px; cursor: default; position: relative; }
+.t-count-rows { display: flex; flex-direction: column; margin: 1.2vh 0; }
+.t-count-row { display: flex; justify-content: space-between; gap: 14px; padding: 5px 0; border-bottom: 1px dashed rgba(181, 155, 106, 0.5); }
+.t-count-row.total { border-bottom: none; border-top: 2px solid var(--ink); margin-top: 4px; padding-top: 8px; font-weight: 700; }
+.t-count-label { font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); }
+.t-count-pts { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--sepia-deep); }
+.t-count-pts.up { color: var(--green); }
+.t-count-pts.down { color: var(--red); }
+.t-held-stamp { position: absolute; top: 14px; right: 14px; transform: rotate(8deg); color: var(--green); border-color: var(--green); font-size: 13px; }
+.t-held-stamp.lost { color: var(--red); border-color: var(--red); }
+.t-night-trust { font-size: clamp(15px, 1.7vw, 19px); margin: 4px 0 10px; }
+.t-night-continue { width: 100%; }
+.t-tap-hint {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #b08e54; margin-top: 1vh; animation: t-pulse 1.8s ease-in-out infinite;
+}
+@keyframes t-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ---- obituary ---- */
+.t-obit-wrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+.t-obit {
+  width: 100%; height: 100%; max-width: 1320px; padding: 2.4vh 2.6vw 1.6vh;
+  display: flex; flex-direction: column; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
+}
+.t-obit-stamps { position: absolute; top: 16px; right: 18px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.t-obit-stamp { transform: rotate(8deg); font-size: 12px; }
+.t-obit-stamp.cut { transform: rotate(-5deg); font-size: 10px; border-width: 2.5px; }
+.t-obit-head { flex: none; text-align: center; border-bottom: 2px solid var(--red); padding: 0 8ch 1.2vh; margin-bottom: 1.4vh; }
+.t-obit-headline { font-family: var(--serif-display); font-weight: 700; font-size: clamp(26px, 3.6vw, 44px); font-variant: small-caps; line-height: 1.02; margin: 0.6vh 0 0.4vh; }
+.t-obit-line { font-family: var(--serif-body); font-style: italic; font-size: clamp(13px, 1.4vw, 16px); opacity: 0.8; }
+.t-epitaph { font-size: clamp(18px, 2.2vw, 26px); margin-top: 0.8vh; transform: rotate(-0.6deg); }
+.t-obit-body { flex: 1; display: grid; grid-template-columns: 1fr 1.25fr; gap: 2.2vw; min-height: 0; }
+.t-obit-left, .t-obit-right { min-width: 0; }
+.t-sec { font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red); margin: 1.2vh 0 0.7vh; }
+.t-timeline { display: flex; flex-direction: column; }
+.t-timeline-row { display: flex; gap: 12px; align-items: baseline; padding: 5px 0; border-bottom: 1px dashed rgba(181, 155, 106, 0.5); }
+.t-timeline-row.end { border-bottom: none; }
+.t-tl-term { flex: none; width: 8ch; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sepia); }
+.t-tl-office { font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); }
+.t-sigvotes { display: flex; flex-direction: column; gap: 8px; }
+.t-sigvote { background: rgba(243, 231, 201, 0.65); border: 1px solid var(--rule); border-left: 4px solid var(--red); border-radius: 6px; padding: 8px 12px; }
+.t-sigvote-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(14px, 1.4vw, 17px); line-height: 1.15; }
+.t-sigvote-line { font-family: var(--serif-body); font-style: italic; font-size: clamp(12px, 1.15vw, 14px); opacity: 0.85; }
+.t-brags { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.t-brags .chip .n { font-size: clamp(16px, 1.8vw, 22px); }
+.t-brags .chip .u { font-size: 8.5px; }
+.t-tallyline { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--sepia-deep); margin-top: 1vh; }
+.t-verdict-name { font-family: var(--serif-display); font-weight: 700; font-size: clamp(22px, 2.4vw, 30px); font-variant: small-caps; line-height: 1.05; }
+.t-verdict-blurb { font-family: var(--serif-body); font-size: clamp(12.5px, 1.2vw, 14px); line-height: 1.45; opacity: 0.85; margin: 0.4vh 0 1vh; }
+.t-thin-note { font-family: var(--serif-body); font-style: italic; font-size: 13px; color: var(--red); margin-bottom: 0.8vh; }
+.t-obit-actions { flex: none; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 1.4vh; }
+.t-disclaimer { flex: none; text-align: center; font-family: var(--serif-body); font-style: italic; font-size: 11.5px; opacity: 0.6; margin-top: 1vh; }
+
+/* ---- shared obituary ---- */
+.t-shared .t-obit-head { padding-bottom: 1.6vh; }
+.t-challenge-copy { font-family: var(--serif-body); font-size: clamp(13px, 1.3vw, 15px); line-height: 1.5; color: var(--ink-soft); margin-bottom: 1.2vh; }
+.t-cta { display: block; width: 100%; margin-bottom: 8px; }
+
+/* ---- the archive (filing cabinet) ---- */
+.t-cabinet-wrap { align-items: center; justify-content: center; padding: 2.4vh 2vw; }
+.t-cabinet {
+  width: min(760px, 100%);
+  max-height: 92vh; /* fallback for engines without dvh */
+  max-height: 92dvh;
+  overflow-y: auto;
+  padding: clamp(20px, 3.5vh, 36px) clamp(22px, 3.5vw, 44px);
+  scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
+}
+.t-cabinet-kick { text-align: center; font-size: 11px; letter-spacing: 0.28em; }
+.t-cabinet-rule { height: 2px; width: 58%; margin: 10px auto 16px; background: linear-gradient(90deg, transparent, var(--red), transparent); }
+.t-cabinet-empty { font-family: var(--serif-body); font-style: italic; text-align: center; opacity: 0.7; padding: 3vh 0; }
+.t-drawer { display: flex; flex-direction: column; gap: 10px; }
+.t-drawer-row {
+  display: flex; align-items: stretch; background: radial-gradient(120% 120% at 20% 0%, var(--paper-1), var(--paper-3));
+  border: 1px solid var(--rule); border-left: 4px solid var(--red); border-radius: 8px; overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.t-drawer-row.honours { border-left-color: var(--green); }
+.t-dr-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; background: transparent; border: none; padding: 10px 14px; color: var(--ink); }
+.t-dr-stamp { font-family: var(--mono); font-weight: 700; font-size: 9.5px; letter-spacing: 0.16em; color: var(--red); }
+.t-dr-title { font-family: var(--serif-display); font-weight: 700; font-size: clamp(16px, 1.7vw, 20px); line-height: 1.1; }
+.t-dr-sub { font-family: var(--serif-body); font-style: italic; font-size: 11.5px; opacity: 0.65; }
+.t-dr-actions { display: flex; flex-direction: column; border-left: 1px solid var(--rule); }
+.t-dr-btn { flex: 1; background: transparent; border: none; border-bottom: 1px solid var(--rule); padding: 0 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); transition: background 0.12s; }
+.t-dr-btn:last-child { border-bottom: none; }
+.t-dr-btn:hover { background: rgba(158, 43, 37, 0.1); }
+.t-dr-btn.burn { color: var(--sepia); font-size: 12px; }
+
+/* ---- phone / narrow ---- */
+@media (max-width: 760px) {
+  .desk .t-strip-office { display: none; }
+  .desk .t-strip-act { font-size: 12px; }
+  .desk .t-knife { font-size: 14px; }
+  .desk .t-career-folder { padding: 10px 12px; gap: 10px; }
+  .desk .t-letter { max-height: none; height: 100%; padding: 18px 6vw; }
+  .desk .t-obit { padding: 2vh 4.5vw; }
+  /* 84px clears the stamp stack even when CUT SHORT doubles it */
+  .desk .t-obit-head { padding-left: 0; padding-right: 0; padding-top: 84px; }
+  .desk .t-obit-body { display: flex; flex-direction: column; gap: 1.6vh; }
+  .desk .t-brags { grid-template-columns: repeat(2, 1fr); }
+  .desk .t-swing, .desk .t-officer { width: 100%; }
+  .desk .t-obit-actions .t-btn { flex: 1 1 40%; }
+}
+
+/* ---- Emergency Whip: leader-only toggle on the docket strip (appended) ---- */
+.t-strip-btn.t-whip { border-style: dashed; color: #c98d5a; border-color: rgba(201, 141, 90, 0.55); }
+.t-strip-btn.t-whip.arm { border-style: solid; border-color: var(--red-bright); color: var(--red-bright); background: rgba(194, 64, 58, 0.12); }
+.t-strip-btn.t-whip:disabled { opacity: 0.4; cursor: default; }
+.t-strip-btn.t-whip:disabled:hover { background: none; }

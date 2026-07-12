@@ -1,6 +1,7 @@
-// Bump BILLS_VERSION whenever the bill deck is regenerated. Saved runs record
-// the version they were played under; resume logic replays by bill id, so adding
-// or removing bills never breaks an old run — this is just for display/telemetry.
+// Bump BILLS_VERSION whenever the bill deck is regenerated. Compass runs record
+// it for display/telemetry only (resume replays by bill id, so deck changes never
+// break them). Terms careers pin their curated docket to this version and drop a
+// saved run on mismatch — see src/terms/lib/storage.ts.
 export const BILLS_VERSION = '2026.06.28'
 
 // Bump only when the SavedRun shape changes. Runs with a different schema are

@@ -1,0 +1,131 @@
+/* ============================================================================
+   Terms — the desk rails. On ≥1200px the centre paper is flanked by two pinned
+   index-card rails (THE HOUSE / THE STANDING); below that the rails vanish and
+   the docket strip + ledger page carry the same figures. Quiet chrome: aged
+   cards on the dark desk, never parchment competing with the centre document.
+   ============================================================================ */
+
+.t-deskgrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+.t-desk-centre { position: relative; display: flex; min-width: 0; min-height: 0; }
+.t-rail { display: none; }
+
+@media (min-width: 1200px) {
+  .t-deskgrid--railed { grid-template-columns: clamp(240px, 19vw, 330px) minmax(0, 1fr) clamp(240px, 19vw, 330px); }
+  .t-deskgrid--railed .t-rail { display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 5vh 1.1vw 3vh; }
+}
+
+.t-rail-inner {
+  display: flex; flex-direction: column; min-height: 0; max-height: 100%; width: 100%;
+  animation: t-rail-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes t-rail-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* the rail header is the one live control: it opens the full ledger */
+.t-rail-head {
+  flex: none; display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  width: 100%; background: none; border: none; border-bottom: 1px solid rgba(216, 181, 107, 0.3);
+  padding: 4px 2px 8px; margin-bottom: 12px; cursor: pointer; text-align: left;
+  font-family: var(--mono); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: #b08e54; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.t-rail-head:hover { color: var(--gold); }
+.t-rail-head-hint { font-weight: 400; font-size: 0.62rem; letter-spacing: 0.16em; opacity: 0; transition: opacity 0.15s; }
+.t-rail-head:hover .t-rail-head-hint { opacity: 0.85; }
+
+.t-rail-scroll {
+  min-height: 0; overflow-y: auto; overflow-x: hidden;
+  display: flex; flex-direction: column; gap: 12px; padding: 5px 3px 12px;
+  scrollbar-width: thin; scrollbar-color: rgba(122, 92, 46, 0.5) transparent;
+}
+.t-rail-scroll::-webkit-scrollbar { width: 4px; }
+.t-rail-scroll::-webkit-scrollbar-thumb { background: rgba(122, 92, 46, 0.5); border-radius: 2px; }
+
+.t-rail-sec {
+  flex: none; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.26em;
+  text-transform: uppercase; color: #8f7546; margin: 8px 2px 0;
+}
+
+/* ---- the pinned index card ---- */
+.t-railcard {
+  position: relative; flex: none;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 21px, rgba(122, 92, 46, 0.1) 21px 22px),
+    linear-gradient(180deg, #e9dcba, #dccda2);
+  border: 1px solid rgba(90, 70, 40, 0.55);
+  border-radius: 3px;
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  padding: 10px 12px 11px;
+  transform: rotate(-0.5deg);
+}
+.t-railcard:nth-of-type(even) { transform: rotate(0.4deg); }
+.t-railcard::before {
+  /* the pin */
+  content: ''; position: absolute; top: -4px; left: 50%; width: 9px; height: 9px; margin-left: -4px;
+  border-radius: 50%; background: radial-gradient(circle at 35% 30%, #d8c8a4, #6d5a33 75%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.55);
+}
+
+.t-railcard-top { display: flex; align-items: baseline; gap: 7px; }
+.t-railcard-name { font-family: var(--mono); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.t-rail-tag {
+  font-family: var(--mono); font-weight: 700; font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--paper-1); background: var(--sepia-deep); border-radius: 2px; padding: 2px 5px;
+}
+.t-railcard-figure {
+  margin-left: auto; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--sepia-deep); white-space: nowrap;
+}
+.t-railcard-figure.due { color: var(--red); }
+
+.t-railcard-line { display: flex; align-items: baseline; gap: 8px; margin-top: 3px; }
+.t-rail-tone { font-family: var(--serif-body); font-style: italic; font-size: 0.98rem; color: var(--ink-soft); }
+.t-rail-fig { font-family: var(--mono); font-weight: 700; font-size: 0.78rem; color: var(--sepia-deep); }
+.t-rail-temp { margin-left: auto; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sepia); }
+.t-rail-temp.hot { color: var(--red); font-weight: 700; }
+
+/* ---- the standing memo: figure printed beside its threshold line ---- */
+.t-rail-memo {
+  margin: 0; padding: 6px 0 7px; border-bottom: 1px dotted rgba(122, 92, 46, 0.4);
+  font-size: 0.9rem; line-height: 1.4;
+}
+.t-railcard--memo .t-rail-memo:last-child { border-bottom: none; padding-bottom: 2px; }
+.t-rail-memo-k { font-family: var(--mono); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+.t-rail-memo-n { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+.t-rail-memo-note { font-family: var(--serif-body); font-style: italic; color: var(--sepia-deep); }
+.t-rail-memo.alert .t-rail-memo-n, .t-rail-memo.alert .t-rail-memo-note { color: var(--red); }
+
+/* ---- promises on the books ---- */
+.t-rail-promise-label { margin: 4px 0 0; font-family: var(--serif-body); font-size: 0.9rem; line-height: 1.35; color: var(--ink-soft); }
+
+/* ---- pinned mandates: title only, engraved edge ---- */
+.t-railcard--mandate { text-align: center; padding: 11px 12px; }
+.t-railcard--mandate::after { content: ''; position: absolute; inset: 4px; border: 1px solid rgba(122, 92, 46, 0.55); border-radius: 2px; pointer-events: none; }
+.t-rail-mandate-title { font-family: var(--mono); font-weight: 700; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia-deep); }
+
+/* ---- redacted clippings (buried, not gone) ---- */
+.t-railcard--clipping { background: linear-gradient(180deg, #eee8d4, #e2d9ba); }
+.t-rail-clip-kick { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sepia-deep); margin-bottom: 6px; }
+.t-railcard--clipping .t-redact { height: 7px; margin: 4px 0; }
+
+/* ---- the brief flash on rows that moved on the last division ---- */
+.t-railcard[data-changed='true'] { animation: t-railcard-flash 1.5s ease-out 1; }
+@keyframes t-railcard-flash {
+  from { outline: 2px solid rgba(232, 176, 74, 0.9); outline-offset: 1px; }
+  to { outline: 2px solid rgba(232, 176, 74, 0); outline-offset: 1px; }
+}
+.t-rail-memo[data-changed='true'] { animation: t-rail-memo-flash 1.5s ease-out 1; }
+@keyframes t-rail-memo-flash {
+  from { background-color: rgba(232, 176, 74, 0.45); }
+  to { background-color: transparent; }
+}
